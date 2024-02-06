@@ -56,7 +56,7 @@ const Signup = () => {
             </p>
             <div className="md:bg-slate-200 bg-slate-200 md:h-px h-px md:my-2 my-2"></div>
 
-            {/* Email & Password field */}
+            {/* Fullname, Email & Password field */}
             <div className="md:w-[300px] w-auto md:mt-2">
               <form action="">
                 <div className="md:flex flex md:flex-col flex-col md:my-0 my-5 md:gap-2 gap-2">
