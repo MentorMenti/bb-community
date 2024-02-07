@@ -21,8 +21,8 @@ const Signup = () => {
 
         <div className="md:flex md:gap-8 md:my-10 md:h-80 h-80 flex flex-col-reverse md:flex-row md:static absolute top-[450px]">
           {/* left section */}
-          <div className="md:w-[300px] md:h-96 md:p-4 md:flex md:flex-col md:gap-5 w-auto h-auto p-4 flex flex-col gap-5">
-            <p className="md:text-gray-500 md:w-[301px] md:h-9 md:text-sm text-gray-500 w-auto h-auto text-sm text-center">
+          <div className="md:w-[300px] md:h-96 md:p-4 md:flex md:flex-col md:gap-5 w-auto h-auto p-4 flex flex-col gap-2 mt-3">
+            <p className="md:text-gray-500 md:w-[301px] md:h-9 md:text-sm text-gray-500 w-auto h-auto text-sm text-center -mb-4 mt-3">
               By continuing you indicate that you agree to Mentorheal's Terms of
               Service and Privacy Policy.
             </p>
@@ -43,6 +43,12 @@ const Signup = () => {
                 />
                 Continue with Google
               </div>
+
+              <Link to="/login">
+                <p className="md:text-sm text-sm md:pl-6 md:text-gray-500 text-gray-500 md:text-center text-center md:hover:underline hover:underline md:hover:cursor-pointer hover:cursor-pointer md:mt-[21px] mt-[21px]">
+                  Already have an account? Login
+                </p>
+              </Link>
             </div>
           </div>
           {/* left section */}
@@ -50,7 +56,7 @@ const Signup = () => {
           <div className="md:bg-slate-200 md:w-px"></div>
 
           {/* right section */}
-          <div className="md:w-[300px] w-auto md:-ml-2 mx-5 md:-mt-4">
+          <div className="md:w-[300px] w-auto md:-ml-2 mx-5 -mb-12 md:-mt-4">
             <p className="md:text-lg text-lg md:font-semibold font-semibold">
               SignUp
             </p>

@@ -44,6 +44,10 @@ const Login = () => {
                 />
                 Continue with Google
               </div>
+
+              <Link to='/signup'>
+              <p className="md:text-sm text-sm md:pl-6 md:text-gray-500 text-gray-500 md:text-center text-center md:hover:underline hover:underline md:hover:cursor-pointer hover:cursor-pointer md:mt-[21px] mt-[21px]">New to MentoHeal? Create an account</p>
+              </Link>
             </div>
           </div>
           {/* left section */}
@@ -96,9 +100,14 @@ const Login = () => {
               <span className="md:text-sm text-sm md:text-gray-500 text-gray-500 md:hover:underline hover:underline md:hover:cursor-pointer hover:cursor-pointer">
                 Forgot Password?
               </span>
-              <button className="md:px-5 px-5 md:py-2 py-2 md:rounded-full rounded-full md:bg-blue-400 bg-blue-400 md:text-white text-white md:font-bold font-bold md:hover:bg-blue-600 hover:bg-blue-600 md:hover:drop-shadow-xl hover:drop-shadow-xl">
+              <button className="md:px-5 px-5 md:py-[7px] py-2 md:rounded-full rounded-full md:bg-blue-500 bg-blue-500 md:text-white text-white md:font-bold font-bold md:hover:bg-blue-600 hover:bg-blue-600 md:hover:drop-shadow-xl hover:drop-shadow-xl">
                 Login
               </button>
+              {/* <Link to="/signup">
+                <button className="md:px-5 px-5 md:py-[7px] py-2 md:rounded-full rounded-full md:bg-white md:hover:text-white md:border-blue-400 md:border bg-blue-400 md:text-blue-400 text-white md:font-bold font-bold md:hover:bg-blue-700 hover:bg-blue-600 md:hover:drop-shadow-xl hover:drop-shadow-xl">
+                  SignUp
+                </button>
+              </Link> */}
             </div>
           </div>
         </div>
