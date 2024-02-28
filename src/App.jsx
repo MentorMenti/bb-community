@@ -6,6 +6,7 @@ import About from "./components/About";
 import Services from "./components/Services";
 import Body from "./components/Body";
 import Signup from "./components/Signup";
+import Dashboard from "./Pages/Dashboard";
 
 const App = () => {
   return (
@@ -40,6 +41,18 @@ export const appRouter = createBrowserRouter([
         path: "/services",
         element: <Services />,
       },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+      // {
+      //   path: "/post/:id",
+      //   element: < />,
+      // },
+      // {
+      //   path: "/category/:id",
+      //   element: < />,
+      // },
     ],
   },
 ]);
