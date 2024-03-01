@@ -7,6 +7,9 @@ import Services from "./components/Services";
 import Body from "./components/Body";
 import Signup from "./components/Signup";
 import Dashboard from "./Pages/Dashboard";
+import Post from "./Pages/Post";
+import Categories from "./Pages/Category";
+import CategoryPage from "./Pages/Category";
 
 const App = () => {
   return (
@@ -45,14 +48,14 @@ export const appRouter = createBrowserRouter([
         path: "/dashboard",
         element: <Dashboard />,
       },
-      // {
-      //   path: "/post/:id",
-      //   element: < />,
-      // },
-      // {
-      //   path: "/category/:id",
-      //   element: < />,
-      // },
+      {
+        path: "/post",
+        element: <Post />,
+      },
+      {
+        path: "/category/:id",
+        element: <CategoryPage />,
+      },
     ],
   },
 ]);
