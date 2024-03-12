@@ -1,8 +1,6 @@
-import React from "react";
-
 const Footer = () => {
   return (
-    <div className="bg-[#4a7999] flex gap-5 absolute w-full h-52 bottom-0">
+    <div className="bg-[#4a7999] flex gap-5 absolute w-full h-52">
       {/* left section */}
       <div className="w-1/2 flex justify-center flex-col items-center gap-5">
         <span className="bg-gradient-to-r from-blue-400 to-blue-100 text-3xl font-semibold text-transparent bg-clip-text">

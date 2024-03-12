@@ -1,8 +1,8 @@
-import React from "react";
+import { Link } from "react-router-dom";
+import { logout } from "../config/firebase";
 import logo from "../../public/static/assets/mentorheal-logo.png";
 import searchlogo from "../../public/static/assets/searchIcon.svg";
 import userProfile from "../../public/static/assets/profile-user.png";
-import { Link } from "react-router-dom";
 
 const NavBar = () => {
   return (
@@ -25,16 +25,12 @@ const NavBar = () => {
       </div>
 
       <div className="flex justify-between items-center gap-8">
-        <Link to="/login">
-          <button className="bg-[#4a7999] py-2 px-5 rounded-3xl text-white font-semibold">
-            Login
-          </button>
-        </Link>
-        <Link to="/signup">
-          <button className="bg-[#4a7999] py-2 px-5 rounded-3xl text-white font-semibold">
-            SignUp
-          </button>
-        </Link>
+        <button
+          className="bg-red-500 hover:bg-red-600 py-2 px-5 rounded-3xl text-white font-semibold"
+          onClick={logout}
+        >
+          Logout
+        </button>
         <div className="w-10 h-10 hover:cursor-pointer">
           <img src={userProfile} alt="" />
         </div>

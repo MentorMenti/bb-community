@@ -1,15 +1,12 @@
 import { Outlet, createBrowserRouter } from "react-router-dom";
-import Footer from "./components/Footer";
+import { NavBar, Footer } from "./components";
 import Login from "./components/Login";
-import NavBar from "./components/NavBar";
 import About from "./components/About";
 import Services from "./components/Services";
 import Body from "./components/Body";
 import Signup from "./components/Signup";
-import Dashboard from "./Pages/Dashboard";
-import Post from "./Pages/Post";
-import Categories from "./Pages/Category";
-import CategoryPage from "./Pages/Category";
+import { Home, CategoryPage, Post } from "./pages";
+// import Categories from "./Pages/Category";
 
 const App = () => {
   return (
@@ -25,7 +22,7 @@ export const appRouter = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/login",
+        path: "/",
         element: <Login />,
       },
       {
@@ -34,7 +31,15 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "/",
-        element: [<NavBar />, <Footer />, <Body />],
+        element: [
+          <NavBar key="navbar" />,
+          <Footer key="footer" />,
+          <Body key="body" />,
+        ],
+      },
+      {
+        path: "/home",
+        element: <Home />,
       },
       {
         path: "/about",
@@ -45,11 +50,7 @@ export const appRouter = createBrowserRouter([
         element: <Services />,
       },
       {
-        path: "/dashboard",
-        element: <Dashboard />,
-      },
-      {
-        path: "/post",
+        path: "/post/:id",
         element: <Post />,
       },
       {

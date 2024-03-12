@@ -1,11 +1,33 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  auth,
+  registerWithEmailAndPassword,
+  signInWithGoogle,
+} from "../config/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 import logo from "../../public/static/assets/mentorheal-logo.png";
-import { Link } from "react-router-dom";
 import microsoftlogo from "../../public/static/assets/microsoft-logo.png";
 import googleLogo from "../../public/static/assets/googleLogo.png";
 import gradient from "../../public/static/assets/background.jpg";
 
 const Signup = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [user, loading] = useAuthState(auth);
+  const navigate = useNavigate();
+
+  const handleRegister = () => {
+    if (!name) alert("Please enter name");
+    registerWithEmailAndPassword(name, email, password);
+  };
+
+  useEffect(() => {
+    if (loading) return;
+    if (user) navigate("/home");
+  }, [user, loading, navigate]);
+
   return (
     <div className="md:w-screen md:h-screen md:bg-gray-100 md:flex md:justify-center md:items-center w-screen h-screen bg-gray-100 flex justify-center items-center">
       <img
@@ -23,11 +45,14 @@ const Signup = () => {
           {/* left section */}
           <div className="md:w-[300px] md:h-96 md:p-4 md:flex md:flex-col md:gap-5 w-auto h-auto p-4 flex flex-col gap-2 mt-3">
             <p className="md:text-gray-500 md:w-[301px] md:h-9 md:text-sm text-gray-500 w-auto h-auto text-sm text-center -mb-4 mt-3">
-              By continuing you indicate that you agree to Mentorheal's Terms of
-              Service and Privacy Policy.
+              By continuing you indicate that you agree to Mentorheal{`'`}s
+              Terms of Service and Privacy Policy.
             </p>
             <div className="md:flex md:flex-col md:gap-5 md:my-10 flex flex-col gap-5 my-10">
-              <div className="md:w-72 w-auto h-auto md:h-12 p-2 md:rounded-sm flex md:flex justify-start md:justify-start gap-3 md:gap-2 items-center md:items-center border md:border border-gray-300 md:border-gray-300 md:px-3 px-4 hover:cursor-pointer md:hover:cursor-pointer hover:bg-slate-100 md:hover:bg-slate-100">
+              <div
+                className="md:w-72 w-auto h-auto md:h-12 p-2 md:rounded-sm flex md:flex justify-start md:justify-start gap-3 md:gap-2 items-center md:items-center border md:border border-gray-300 md:border-gray-300 md:px-3 px-4 hover:cursor-pointer md:hover:cursor-pointer hover:bg-slate-100 md:hover:bg-slate-100"
+                onClick={signInWithGoogle}
+              >
                 <img
                   className="md:w-10 w-6 md:h-10 h-6"
                   src={microsoftlogo}
@@ -35,7 +60,10 @@ const Signup = () => {
                 />
                 Continue with Microsoft
               </div>
-              <div className="md:w-72 w-auto md:h-12 h-auto p-2 md:rounded-sm flex md:flex justify-start md:justify-start gap-3 md:gap-3 px-4 md:px-4 items-center md:items-center border md:border border-gray-300 md:border-gray-300 hover:cursor-pointer md:hover:cursor-pointer hover:bg-slate-100 md:hover:bg-slate-100">
+              <div
+                className="md:w-72 w-auto md:h-12 h-auto p-2 md:rounded-sm flex md:flex justify-start md:justify-start gap-3 md:gap-3 px-4 md:px-4 items-center md:items-center border md:border border-gray-300 md:border-gray-300 hover:cursor-pointer md:hover:cursor-pointer hover:bg-slate-100 md:hover:bg-slate-100"
+                onClick={signInWithGoogle}
+              >
                 <img
                   className="md:w-8 w-6 md:h-8 h-6"
                   src={googleLogo}
@@ -64,7 +92,7 @@ const Signup = () => {
 
             {/* Fullname, Email & Password field */}
             <div className="md:w-[300px] w-auto md:mt-2">
-              <form action="">
+              <form onSubmit={handleRegister}>
                 <div className="md:flex flex md:flex-col flex-col md:my-0 my-5 md:gap-2 gap-2">
                   <label
                     className="md:text-sm text-sm md:font-bold font-bold"
@@ -76,6 +104,8 @@ const Signup = () => {
                     className="md:border border md:border-gray-300 border-gray-300 md:focus:outline-none focus:outline-none md:focus:border-blue-500 focus:border-blue-500 md:rounded-sm md:p-2 p-3 md:hover:border-blue-500 hover:border-blue-500"
                     type="text"
                     placeholder="Your fullname"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                   />
                 </div>
@@ -91,6 +121,8 @@ const Signup = () => {
                     className="md:border border border-gray-300 md:border-gray-300 focus:outline-none md:focus:outline-none md:rounded-sm focus:border-blue-500 md:focus:border-blue-500 md:p-2 p-3 md:hover:border-blue-500 hover:border-blue-500"
                     type="text"
                     placeholder="Your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
@@ -106,16 +138,20 @@ const Signup = () => {
                     className="md:border border border-gray-300 md:border-gray-300 focus:outline-none md:focus:outline-none md:rounded-sm focus:border-blue-500 md:focus:border-blue-500 md:p-2 p-3 md:hover:border-blue-500 hover:border-blue-500"
                     type="text"
                     placeholder="Your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                 </div>
+                <div className="md:flex flex md:justify-between justify-between md:items-center items-center md:my-7 my-7">
+                  <button
+                    type="submit"
+                    className="md:px-5 px-5 md:py-2 py-2 md:rounded-full rounded-full md:bg-blue-400 bg-blue-400 md:text-white text-white md:font-bold font-bold md:hover:bg-blue-600 hover:bg-blue-600 md:hover:drop-shadow-xl hover:drop-shadow-xl"
+                  >
+                    Sign Up
+                  </button>
+                </div>
               </form>
-            </div>
-
-            <div className="md:flex flex md:justify-between justify-between md:items-center items-center md:my-7 my-7">
-              <button className="md:px-5 px-5 md:py-2 py-2 md:rounded-full rounded-full md:bg-blue-400 bg-blue-400 md:text-white text-white md:font-bold font-bold md:hover:bg-blue-600 hover:bg-blue-600 md:hover:drop-shadow-xl hover:drop-shadow-xl">
-                SignUp
-              </button>
             </div>
           </div>
         </div>

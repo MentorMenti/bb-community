@@ -1,11 +1,10 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 const RecommendedPosts = () => {
   return (
-    <div>
+    <div className="border-black border hidden md:block md:w-[20%]">
       <div>Recommended Posts</div>
-      <ul className="flex flex-row gap-6 border-black border-2 p-4 sm:flex-col flex-wrap">
+      <ul className="flex flex-row gap-6 p-4 sm:flex-col flex-wrap">
         <Link className="flex flex-row" to={`/category/`}>
           What is the meaning of life?
         </Link>

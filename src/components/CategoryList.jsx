@@ -1,10 +1,10 @@
 import React from "react";
-import { MdHealthAndSafety } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { MdHealthAndSafety } from "react-icons/md";
 
 const CategoryList = () => {
   return (
-    <ul className="flex flex-row gap-6 border-black border-2 p-4 sm:flex-col flex-wrap">
+    <ul className="w-full md:w-[20%] flex flex-row gap-2 border-black border p-4 sm:flex-col flex-wrap [&>a]:w-40 [&>a]:bg-green-400">
       <Link className="flex flex-row" to={`/category/health`}>
         <MdHealthAndSafety size={24} />
         Health
