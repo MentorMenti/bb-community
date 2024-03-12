@@ -1,12 +1,34 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  auth,
+  logInWithEmailAndPassword,
+  signInWithGoogle,
+} from "../config/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 import logo from "../../public/static/assets/mentorheal-logo.png";
-import { Link } from "react-router-dom";
 import microsoftlogo from "../../public/static/assets/microsoft-logo.png";
-import loginbg from "../../public/static/assets/loginbg.jpg";
+// import loginbg from "../../public/static/assets/loginbg.jpg";
 import googleLogo from "../../public/static/assets/googleLogo.png";
 import gradient from "../../public/static/assets/background.jpg";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, loading] = useAuthState(auth);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (loading) return;
+
+    if (user) navigate("/home");
+  }, [user, loading, navigate]);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    logInWithEmailAndPassword(email, password);
+  };
+
   return (
     <div className="md:w-screen md:h-screen md:bg-gray-100 md:flex md:justify-center md:items-center w-screen h-screen bg-gray-100 flex justify-center items-center">
       <img
@@ -24,11 +46,14 @@ const Login = () => {
           {/* left section */}
           <div className="md:w-[300px] md:h-96 md:p-4 md:flex md:flex-col md:gap-5 w-auto h-auto p-4 flex flex-col gap-5">
             <p className="md:text-gray-500 md:w-[301px] md:h-9 md:text-sm text-gray-500 w-auto h-auto text-sm text-center">
-              By continuing you indicate that you agree to Mentorheal's Terms of
-              Service and Privacy Policy.
+              By continuing you indicate that you agree to Mentorheal{`'`}s
+              Terms of Service and Privacy Policy.
             </p>
             <div className="md:flex md:flex-col md:gap-5 md:my-10 flex flex-col gap-5 my-10">
-              <div className="md:w-72 w-auto h-auto md:h-12 p-2 md:rounded-sm flex md:flex justify-start md:justify-start gap-3 md:gap-2 items-center md:items-center border md:border border-gray-300 md:border-gray-300 md:px-3 px-4 hover:cursor-pointer md:hover:cursor-pointer hover:bg-slate-100 md:hover:bg-slate-100">
+              <div
+                className="md:w-72 w-auto h-auto md:h-12 p-2 md:rounded-sm flex md:flex justify-start md:justify-start gap-3 md:gap-2 items-center md:items-center border md:border border-gray-300 md:border-gray-300 md:px-3 px-4 hover:cursor-pointer md:hover:cursor-pointer hover:bg-slate-100 md:hover:bg-slate-100"
+                onClick={signInWithGoogle}
+              >
                 <img
                   className="md:w-10 w-6 md:h-10 h-6"
                   src={microsoftlogo}
@@ -36,7 +61,10 @@ const Login = () => {
                 />
                 Continue with Microsoft
               </div>
-              <div className="md:w-72 w-auto md:h-12 h-auto p-2 md:rounded-sm flex md:flex justify-start md:justify-start gap-3 md:gap-3 px-4 md:px-4 items-center md:items-center border md:border border-gray-300 md:border-gray-300 hover:cursor-pointer md:hover:cursor-pointer hover:bg-slate-100 md:hover:bg-slate-100">
+              <div
+                className="md:w-72 w-auto md:h-12 h-auto p-2 md:rounded-sm flex md:flex justify-start md:justify-start gap-3 md:gap-3 px-4 md:px-4 items-center md:items-center border md:border border-gray-300 md:border-gray-300 hover:cursor-pointer md:hover:cursor-pointer hover:bg-slate-100 md:hover:bg-slate-100"
+                onClick={signInWithGoogle}
+              >
                 <img
                   className="md:w-8 w-6 md:h-8 h-6"
                   src={googleLogo}
@@ -45,8 +73,10 @@ const Login = () => {
                 Continue with Google
               </div>
 
-              <Link to='/signup'>
-              <p className="md:text-sm text-sm md:pl-6 md:text-gray-500 text-gray-500 md:text-center text-center md:hover:underline hover:underline md:hover:cursor-pointer hover:cursor-pointer md:mt-[21px] mt-[21px]">New to MentoHeal? Create an account</p>
+              <Link to="/signup">
+                <p className="md:text-sm text-sm md:pl-6 md:text-gray-500 text-gray-500 md:text-center text-center md:hover:underline hover:underline md:hover:cursor-pointer hover:cursor-pointer md:mt-[21px] mt-[21px]">
+                  New to MentorHeal? Create an account
+                </p>
               </Link>
             </div>
           </div>
@@ -63,7 +93,7 @@ const Login = () => {
 
             {/* Email & Password field */}
             <div className="md:w-[300px] w-auto">
-              <form action="">
+              <form onSubmit={handleLogin}>
                 <div className="md:flex flex md:flex-col flex-col md:my-5 my-5 md:gap-2 gap-2">
                   <label
                     className="md:text-sm text-sm md:font-bold font-bold"
@@ -75,6 +105,8 @@ const Login = () => {
                     className="md:border border md:border-gray-300 border-gray-300 md:focus:outline-none focus:outline-none md:focus:border-blue-500 focus:border-blue-500 md:rounded-sm md:p-3 p-3 md:hover:border-blue-500 hover:border-blue-500"
                     type="text"
                     placeholder="Your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
@@ -90,24 +122,28 @@ const Login = () => {
                     className="md:border border border-gray-300 md:border-gray-300 focus:outline-none md:focus:outline-none md:rounded-sm focus:border-blue-500 md:focus:border-blue-500 md:p-3 p-3 md:hover:border-blue-500 hover:border-blue-500"
                     type="text"
                     placeholder="Your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                 </div>
-              </form>
-            </div>
-
-            <div className="md:flex flex md:justify-between justify-between md:items-center items-center md:my-7 my-7">
-              <span className="md:text-sm text-sm md:text-gray-500 text-gray-500 md:hover:underline hover:underline md:hover:cursor-pointer hover:cursor-pointer">
-                Forgot Password?
-              </span>
-              <button className="md:px-5 px-5 md:py-[7px] py-2 md:rounded-full rounded-full md:bg-blue-500 bg-blue-500 md:text-white text-white md:font-bold font-bold md:hover:bg-blue-600 hover:bg-blue-600 md:hover:drop-shadow-xl hover:drop-shadow-xl">
-                Login
-              </button>
-              {/* <Link to="/signup">
+                <div className="md:flex flex md:justify-between justify-between md:items-center items-center md:my-7 my-7">
+                  <span className="md:text-sm text-sm md:text-gray-500 text-gray-500 md:hover:underline hover:underline md:hover:cursor-pointer hover:cursor-pointer">
+                    Forgot Password?
+                  </span>
+                  <button
+                    type="submit"
+                    className="md:px-5 px-5 md:py-[7px] py-2 md:rounded-full rounded-full md:bg-blue-500 bg-blue-500 md:text-white text-white md:font-bold font-bold md:hover:bg-blue-600 hover:bg-blue-600 md:hover:drop-shadow-xl hover:drop-shadow-xl"
+                  >
+                    Login
+                  </button>
+                  {/* <Link to="/signup">
                 <button className="md:px-5 px-5 md:py-[7px] py-2 md:rounded-full rounded-full md:bg-white md:hover:text-white md:border-blue-400 md:border bg-blue-400 md:text-blue-400 text-white md:font-bold font-bold md:hover:bg-blue-700 hover:bg-blue-600 md:hover:drop-shadow-xl hover:drop-shadow-xl">
                   SignUp
                 </button>
               </Link> */}
+                </div>
+              </form>
             </div>
           </div>
         </div>
