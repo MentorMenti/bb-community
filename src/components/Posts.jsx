@@ -26,6 +26,10 @@ const Posts = () => {
           timestamp: new Date(),
           comments: [],
           uid: user.uid,
+          metadata: {
+            upvotes: 0,
+            downvotes: 0,
+          },
         };
         const postRef = collection(db, "posts");
         const createdPost = await addDoc(postRef, postData);
@@ -34,6 +38,7 @@ const Posts = () => {
         setNewPost("");
       } catch (error) {
         console.error("Error creating post:", error);
+        alert("Error creating post: ", error.message);
       }
     };
 
