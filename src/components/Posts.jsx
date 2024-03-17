@@ -61,7 +61,7 @@ const Posts = () => {
   }, []);
 
   return (
-    <div className="max-h-dvh overflow-auto w-full md:w-[50%] flex flex-col gap-4 ">
+    <div className=" overflow-auto w-full md:w-[50%] flex flex-col gap-4  ">
       <form
         className="p-4 flex flex-col gap-4 border-black border rounded"
         onSubmit={handleCreatePost}
@@ -107,13 +107,13 @@ const Posts = () => {
           <div className="p-2">{post.text}</div>
 
           <div className="flex flex-row gap-4 items-center">
-            <div className="flex flex-row gap-2 items-center">
+            <div className="flex flex-row gap-1 items-center">
               <button>
                 <BiSolidUpvote size={24} />
               </button>
               <div>{post.upvotes ? post.upvotes : 0}</div>
             </div>
-            <div className="flex flex-row gap-2 items-center">
+            <div className="flex flex-row gap-1 items-center">
               <button>
                 <BiSolidDownvote size={24} />
               </button>
