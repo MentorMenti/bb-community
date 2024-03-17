@@ -72,7 +72,7 @@ const Signup = () => {
                 Continue with Google
               </div>
 
-              <Link to="/login">
+              <Link to="/">
                 <p className="md:text-sm text-sm md:pl-6 md:text-gray-500 text-gray-500 md:text-center text-center md:hover:underline hover:underline md:hover:cursor-pointer hover:cursor-pointer md:mt-[21px] mt-[21px]">
                   Already have an account? Login
                 </p>

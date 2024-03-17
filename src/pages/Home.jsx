@@ -13,7 +13,8 @@ const Home = () => {
   if (!user) return <Login />;
 
   return (
-    <React.Fragment>
+    // <React.Fragment>
+    <div className="w-full border-black border">
       <NavBar />
       <div className="md:py-6 md:px-6 flex flex-col gap-4 justify-between md:flex-row">
         <Categories />
@@ -21,7 +22,9 @@ const Home = () => {
         <RecommendedPosts />
       </div>
       <Footer />
-    </React.Fragment>
+    </div>
+
+    // </React.Fragment>
   );
 };
 

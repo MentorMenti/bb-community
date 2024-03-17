@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./Modal.css";
 
 function Modal(props) {
-  const [inpText, setInpText] = useState("");
+  // const [inpText, setInpText] = useState("");
   const [disable, setDisable] = useState(true);
   return (
     <div className="popup">
@@ -21,12 +21,12 @@ function Modal(props) {
         <input
           className="border-0"
           type="text"
-          value={inpText}
+          value={props.newPost}
           placeholder="Say something"
           onChange={(e) => {
-            setInpText(e.target.value);
-            if (inpText.length > 0) {
-              setDisable(!disable);
+            props.setNewPost(e.target.value);
+            if (props.newPost > 0) {
+              setDisable(false);
             }
           }}
         />
