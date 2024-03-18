@@ -107,7 +107,7 @@ const Posts = () => {
           <div className="p-2">{post.text}</div>
 
           <div className="flex flex-row gap-4 items-center">
-            <div className="flex flex-row gap-1 items-center">
+            {/* <div className="flex flex-row gap-1 items-center">
               <button>
                 <BiSolidUpvote size={24} />
               </button>
@@ -118,7 +118,7 @@ const Posts = () => {
                 <BiSolidDownvote size={24} />
               </button>
               <div>{post.downvotes ? post.downvotes : 0}</div>
-            </div>
+            </div> */}
             <Link
               to={`/post/${post.id}`}
               className=" bg-[#4a7999] text-white p-2 text-center w-20 rounded font-semibold"

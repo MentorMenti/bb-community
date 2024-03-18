@@ -9,9 +9,9 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 const Post = () => {
   const [showReply, setShowReply] = useState(false);
+  const [newComment, setnewComment] = useState([]);
 
   const { id } = useParams();
-  console.log(id);
   const navigate = useNavigate();
 
   const [postDetail, setPostDetail] = useState({
@@ -21,21 +21,39 @@ const Post = () => {
     text: "",
   });
 
+  const addComment = async () => {
+    const docRef = doc(db, "posts", id);
+    // setPostDetail({ ...postDetail, downvotes: updatedVotes });
+    const docSnap = await getDoc(docRef);
+    // console.log(docSnap.data());
+
+    var updatedComment = docSnap.data().comment;
+    updatedComment = updatedComment
+      ? [...updatedComment, newComment]
+      : [newComment];
+    // console.log(updatedComment);
+
+    await updateDoc(docRef, {
+      comment: updatedComment,
+    });
+  };
+
   const fetchPost = async () => {
     const docRef = doc(db, "posts", id);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       const postData = docSnap.data();
-      setPostDetail({
+      const result = {
         ...postDetail,
-        comments: postData.comments,
+        comments: postData.comment,
         upvotes: postData.metadata.upvotes,
         downvotes: postData.metadata.downvotes,
         text: postData.text,
-      });
+      };
+      setPostDetail(result);
 
-      console.log(postData, postDetail);
+      // console.log(postData, postDetail);
     } else {
       navigate("/home");
     }
@@ -64,7 +82,7 @@ const Post = () => {
                 onClick={async () => {
                   const docRef = doc(db, "posts", id);
                   const updatedVotes = postDetail.upvotes + 1;
-                  console.log(updatedVotes);
+                  // console.log(updatedVotes);
                   setPostDetail({ ...postDetail, upvotes: updatedVotes });
 
                   await updateDoc(docRef, {
@@ -81,7 +99,7 @@ const Post = () => {
                 onClick={async () => {
                   const docRef = doc(db, "posts", id);
                   const updatedVotes = postDetail.downvotes + 1;
-                  console.log(`updated downvote ${updatedVotes}`);
+                  // console.log(`updated downvote ${updatedVotes}`);
                   setPostDetail({ ...postDetail, downvotes: updatedVotes });
 
                   await updateDoc(docRef, {
@@ -100,6 +118,11 @@ const Post = () => {
           <div className="border-black border rounded p-4 flex flex-row gap-4 items-center">
             <CgProfile size={36} />
             <input
+              onChange={(e) => {
+                const value = e.target.value;
+                setnewComment(value);
+                // console.log(newComment);
+              }}
               className="border-black border rounded p-2 w-full"
               type="text"
               name="name"
@@ -108,41 +131,52 @@ const Post = () => {
           </div>
 
           <button
-            onClick={(e) => setShowReply(true)}
+            onClick={(e) => {
+              setShowReply(true);
+              addComment();
+            }}
             className=" rounded p-2 w-20 bg-[#4a7999] text-white"
           >
             submit
           </button>
         </div>
 
-        <div className="border-black border rounded p-4 w-2/5">
+        <div className="border-black border rounded p-4 gap-4 w-2/5">
           <div className="text-2xl">Answered by others</div>
           <br />
-          <div className="flex flex-col gap-4">
-            <div className="border-black border rounded p-4 flex flex-row gap-4 items-center">
-              <CgProfile size={36} />
-              <div>User2</div>
-            </div>
-            <div className="border-black border rounded p-2 ">Answer</div>
 
-            <div className="flex flex-row gap-4 items-center">
-              <div className="flex flex-row gap-1">
-                <button>
-                  <BiSolidUpvote size={24} />
-                </button>
-                <div>14</div>
-              </div>
-              <div className="flex flex-row gap-1">
-                <button>
-                  <BiSolidDownvote size={24} />
-                </button>
-                <div>1</div>
-              </div>
-              <button className="bg-[#4a7999] text-white rounded p-2 w-20">
-                Reply
-              </button>
-            </div>
-            {showReply ? (
+          <div className="flex flex-col gap-6">
+            {postDetail.comments
+              ? postDetail.comments.map((post, key) => {
+                  return (
+                    <div
+                      key={key}
+                      className="border-black border p-4 rounded flex flex-col gap-4 "
+                    >
+                      <div className="border-black border rounded p-2 flex flex-row gap-4 items-center">
+                        <CgProfile size={36} />
+                        <div>User2</div>
+                      </div>
+                      <div className="border-black p-2 ">{post}</div>
+
+                      <div className=" flex flex-row gap-4 items-center">
+                        <div className="flex flex-row gap-1">
+                          <button>
+                            <BiSolidUpvote size={24} />
+                          </button>
+                          <div>14</div>
+                        </div>
+                        <div className="flex flex-row gap-1">
+                          <button>
+                            <BiSolidDownvote size={24} />
+                          </button>
+                          <div>1</div>
+                        </div>
+                        <button className="bg-[#4a7999] text-white rounded p-2 w-20">
+                          Reply
+                        </button>
+                      </div>
+                      {/* {showReply ? (
               <div className="pl-20 flex flex-col gap-4">
                 <div className="border-black border rounded p-4 flex flex-row gap-4 items-center">
                   <CgProfile size={36} />
@@ -162,9 +196,14 @@ const Post = () => {
                   </button>
                 </div>
               </div>
-            ) : null}
+            ) : null} */}
+                    </div>
+                  );
+                })
+              : null}
           </div>
         </div>
+        <br />
       </div>
 
       <Footer />
