@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDoc,
+  getDocs,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, db } from "../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { CgProfile } from "react-icons/cg";
 import Modal from "./Modal";
 import { BiSolidUpvote, BiSolidDownvote } from "react-icons/bi";
-
+import { FaReply } from "react-icons/fa";
 const Posts = () => {
   const [seen, setSeen] = useState(false);
 
@@ -100,30 +107,76 @@ const Posts = () => {
           className="border-black border p-4 flex flex-col gap-2 rounded"
           key={key}
         >
-          <div className="border-black border-2 p-4 flex flex-row gap-4 rounded">
+          <div className="border-black flex flex-row gap-4 rounded items-center">
             <CgProfile size={36} />
-            <div>{post.author}</div>
-          </div>
-          <div className="p-2">{post.text}</div>
-
-          <div className="flex flex-row gap-4 items-center">
-            {/* <div className="flex flex-row gap-1 items-center">
-              <button>
-                <BiSolidUpvote size={24} />
-              </button>
-              <div>{post.upvotes ? post.upvotes : 0}</div>
+            <div className="items-center">
+              <div>
+                {post.author ? post.author : "Anonymous"} &nbsp;
+                <div className="h-[5px] w-[5px] bg-[#bbb] inline-block rounded-[50%]"></div>{" "}
+                (Time)
+              </div>
+              <div className="text-xs">Category</div>
             </div>
-            <div className="flex flex-row gap-1 items-center">
-              <button>
-                <BiSolidDownvote size={24} />
-              </button>
-              <div>{post.downvotes ? post.downvotes : 0}</div>
-            </div> */}
+          </div>
+          <div className="">{post.text}</div>
+
+          <hr class="rounded-md mb-3" />
+
+          <div className="flex flex-row gap-4 justify-between">
+            <div className="flex flex-row gap-4">
+              <div className="flex flex-row gap-1 items-center border-black border rounded p-1">
+                <button
+                  onClick={async () => {
+                    const docRef = doc(db, "posts", post.id);
+                    const docSnap = await getDoc(docRef);
+                    const postData = docSnap.data();
+
+                    const updatedVotes = postData.metadata.upvotes + 1;
+
+                    console.log(
+                      ` intial upvotes ${postData.metadata.upvotes} updated downvote ${updatedVotes}`
+                    );
+
+                    await updateDoc(docRef, {
+                      "metadata.upvotes": updatedVotes,
+                    });
+                  }}
+                >
+                  <BiSolidUpvote color="#4a7999" size={18} />
+                </button>
+                <div>{post.metadata.upvotes ? post.metadata.upvotes : 0}</div>
+              </div>
+              <div className="flex flex-row gap-1 items-center border-black border rounded p-1 ">
+                <button
+                  onClick={async () => {
+                    const docRef = doc(db, "posts", post.id);
+                    const docSnap = await getDoc(docRef);
+                    const postData = docSnap.data();
+
+                    const updatedVotes = postData.metadata.downvotes + 1;
+
+                    console.log(
+                      ` intial downvotes ${postData.metadata.downvotes} updated downvote ${updatedVotes}`
+                    );
+
+                    await updateDoc(docRef, {
+                      "metadata.downvotes": updatedVotes,
+                    });
+                  }}
+                >
+                  <BiSolidDownvote color="#4a7999" size={18} />
+                </button>
+                <div>
+                  {post.metadata.downvotes ? post.metadata.downvotes : 0}
+                </div>
+              </div>
+            </div>
+
             <Link
               to={`/post/${post.id}`}
-              className=" bg-[#4a7999] text-white p-2 text-center w-20 rounded font-semibold"
+              className=" bg-[#4a7999] text-white py-1 text-center flex gap-1 justify-center items-center w-20 rounded font-semibold"
             >
-              REPLY
+              <FaReply color="white" size={14} /> Reply
             </Link>
           </div>
         </div>
