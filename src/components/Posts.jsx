@@ -7,6 +7,8 @@ import {
   getDocs,
   doc,
   updateDoc,
+  query,
+  orderBy,
 } from "firebase/firestore";
 import { auth, db } from "../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -14,11 +16,12 @@ import { CgProfile } from "react-icons/cg";
 import Modal from "./Modal";
 import { BiSolidUpvote, BiSolidDownvote } from "react-icons/bi";
 import { FaReply } from "react-icons/fa";
+
 const Posts = () => {
   const [seen, setSeen] = useState(false);
 
   function togglePop() {
-    setSeen(!seen);
+    setSeen((prev) => !prev);
   }
 
   const [posts, setPosts] = useState([]);
@@ -51,12 +54,14 @@ const Posts = () => {
     };
 
     createPost();
+    setSeen(false);
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const postsRef = collection(db, "posts");
-      const snapshot = await getDocs(postsRef);
+      const q = query(postsRef, orderBy("timestamp", "desc"));
+      const snapshot = await getDocs(q);
       const postData = snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
@@ -68,115 +73,115 @@ const Posts = () => {
   }, []);
 
   return (
-    <div className=" overflow-auto w-full md:w-[50%] flex flex-col gap-4  ">
+    <div className="overflow-auto w-full md:w-[50%] flex flex-col gap-2">
       <form
-        className="p-4 flex flex-col gap-4 border-black border rounded"
+        className="p-4 flex flex-row gap-4 items-center border-blue-200 border rounded-md mx-2 mb-2 shadow-md"
         onSubmit={handleCreatePost}
       >
-        <div className="border-black border p-4 flex flex-row gap-4 items-center rounded">
-          <div>
-            <CgProfile size={36} />
-          </div>
-          <input
-            // onClick={togglePop}
-            className="border-black border rounded p-2 w-full"
-            type="text"
-            name="name"
-            placeholder="Enter your question"
-            value={newPost}
-            onChange={(e) => setNewPost(e.target.value)}
-            required
-          />
+        <div>
+          <CgProfile size={36} />
         </div>
-
+        <input
+          onClick={togglePop}
+          className="border rounded-md p-2 w-full outline-none"
+          type="text"
+          placeholder="Enter your question"
+          value={newPost}
+          onChange={(e) => setNewPost(e.target.value)}
+          readOnly
+        />
         <button
-          // onClick={togglePop}
-          type="submit"
-          className="border-black border p-2 rounded"
+          onClick={togglePop}
+          className="bg-primary text-white border h-full min-w-20 rounded-md"
         >
-          Post
+          Ask
         </button>
 
         {seen ? (
           <Modal newPost={newPost} setNewPost={setNewPost} toggle={togglePop} />
         ) : null}
       </form>
-      {posts ? console.log(posts) : 0}
-      {posts?.map((post, key) => (
+
+      {posts?.map((post) => (
         <div
-          className="border-black border p-4 flex flex-col gap-2 rounded"
-          key={key}
+          key={post.id}
+          className="border-blue-100 border p-4 m-2 flex flex-col gap-2 rounded-md drop-shadow-md bg-white hover:shadow-xl transition duration-300 ease-in-out"
         >
-          <div className="border-black flex flex-row gap-4 rounded items-center">
+          <div className="flex flex-row gap-4 rounded-md items-center">
             <CgProfile size={36} />
             <div className="items-center">
-              <div>
-                {post.author ? post.author : "Anonymous"} &nbsp;
-                <div className="h-[5px] w-[5px] bg-[#bbb] inline-block rounded-[50%]"></div>{" "}
-                (Time)
+              <div className="flex gap-2 items-center">
+                {post.author ?? "Anonymous"}
+                <div className="h-1.5 w-1.5 bg-[#bbb] inline-block rounded-full"></div>
+                {post?.timestamp?.toDate().toDateString()}
               </div>
-              <div className="text-xs">Category</div>
+              <div className="text-xs">{post?.category ?? "Uncategorised"}</div>
             </div>
           </div>
-          <div className="">{post.text}</div>
 
-          <hr class="rounded-md mb-3" />
+          <Link to={`/post/${post.id}`} className="">
+            {post.text}
+          </Link>
+
+          <hr className="my-1" />
 
           <div className="flex flex-row gap-4 justify-between">
             <div className="flex flex-row gap-4">
-              <div className="flex flex-row gap-1 items-center border-black border rounded p-1">
-                <button
-                  onClick={async () => {
-                    const docRef = doc(db, "posts", post.id);
-                    const docSnap = await getDoc(docRef);
-                    const postData = docSnap.data();
+              <button
+                type="button"
+                className="flex flex-row gap-1 items-center justify-center w-16 border-blue-200 bg-blue-50 border rounded-md p-1 shadow-md shadow-blue-50 hover:shadow-blue-100"
+                onClick={async () => {
+                  const docRef = doc(db, "posts", post.id);
+                  const docSnap = await getDoc(docRef);
+                  const postData = docSnap.data();
 
-                    const updatedVotes = postData.metadata.upvotes + 1;
+                  const updatedVotes = postData.metadata.upvotes + 1;
 
-                    console.log(
-                      ` intial upvotes ${postData.metadata.upvotes} updated downvote ${updatedVotes}`
-                    );
+                  console.log(
+                    ` intial upvotes ${postData.metadata.upvotes} updated downvote ${updatedVotes}`
+                  );
 
-                    await updateDoc(docRef, {
-                      "metadata.upvotes": updatedVotes,
-                    });
-                  }}
-                >
-                  <BiSolidUpvote color="#4a7999" size={18} />
-                </button>
-                <div>{post.metadata.upvotes ? post.metadata.upvotes : 0}</div>
-              </div>
-              <div className="flex flex-row gap-1 items-center border-black border rounded p-1 ">
-                <button
-                  onClick={async () => {
-                    const docRef = doc(db, "posts", post.id);
-                    const docSnap = await getDoc(docRef);
-                    const postData = docSnap.data();
+                  await updateDoc(docRef, {
+                    "metadata.upvotes": updatedVotes,
+                  });
+                }}
+              >
+                <BiSolidUpvote color="#4a7999" size={18} />
+                <span>{post.metadata.upvotes ? post.metadata.upvotes : 0}</span>
+              </button>
+              <button
+                type="button"
+                className="flex flex-row gap-1 items-center justify-center w-16 border-blue-200 bg-blue-50 border rounded-md p-1 shadow-md shadow-blue-50 hover:shadow-blue-100"
+                onClick={async () => {
+                  const docRef = doc(db, "posts", post.id);
+                  const docSnap = await getDoc(docRef);
+                  const postData = docSnap.data();
 
-                    const updatedVotes = postData.metadata.downvotes + 1;
+                  const updatedVotes = postData.metadata.downvotes + 1;
 
-                    console.log(
-                      ` intial downvotes ${postData.metadata.downvotes} updated downvote ${updatedVotes}`
-                    );
+                  console.log(
+                    ` intial downvotes ${postData.metadata.downvotes} updated downvote ${updatedVotes}`
+                  );
 
-                    await updateDoc(docRef, {
-                      "metadata.downvotes": updatedVotes,
-                    });
-                  }}
-                >
-                  <BiSolidDownvote color="#4a7999" size={18} />
-                </button>
-                <div>
+                  await updateDoc(docRef, {
+                    "metadata.downvotes": updatedVotes,
+                  });
+                }}
+              >
+                <BiSolidDownvote color="#4a7999" size={18} />
+
+                <span>
                   {post.metadata.downvotes ? post.metadata.downvotes : 0}
-                </div>
-              </div>
+                </span>
+              </button>
             </div>
 
             <Link
               to={`/post/${post.id}`}
-              className=" bg-[#4a7999] text-white py-1 text-center flex gap-1 justify-center items-center w-20 rounded font-semibold"
+              className=" bg-primary bg-opacity-95 hover:bg-opacity-100 text-white py-1 text-center flex gap-1 justify-center items-center w-20 rounded-md font-semibold drop-shadow-md"
             >
-              <FaReply color="white" size={14} /> Reply
+              <FaReply color="white" size={14} />
+              <span className="ml-1">Reply</span>
             </Link>
           </div>
         </div>

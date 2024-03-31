@@ -1,32 +1,175 @@
-const Footer = () => {
-  return (
-    <div className="bg-[#4a7999] flex gap-5 absolute w-full h-52">
-      {/* left section */}
-      <div className="w-1/2 flex justify-center flex-col items-center gap-5">
-        <span className="bg-gradient-to-r from-blue-400 to-blue-100 text-3xl font-semibold text-transparent bg-clip-text">
-          MentorHeal
-        </span>
-        <p className="text-sm font-semibold text-white w-[700px] text-center">
-          MentorHeal is the holistic wellness mentorship platform where we
-          connect the mentees with experienced, qualified and certified mentors
-          across the country.
-        </p>
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { db } from "../config/firebase";
+import { addDoc, collection } from "firebase/firestore";
+import { server } from "../api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+// import { Carddata } from "./";
+import {
+  FaInstagram,
+  FaLinkedin,
+  FaXTwitter,
+  FaYoutube,
+} from "react-icons/fa6";
 
-        <div className="flex gap-3">
-          <input
-            className="rounded-full bg-white py-2 px-6 focus:outline-none "
-            type="text"
-            placeholder="Your email"
-          />
-          <button className="rounded-full border-2 border-white text-white font-semibold py-3 px-4 text-base bg-[#5d8aa6]">
-            Subscribe Now!
-          </button>
+const Footer = () => {
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const year = new Date().getFullYear();
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await addDoc(collection(db, "newsletter"), {
+        email: email.toLowerCase(),
+        active: true,
+        date: new Date(),
+        source: window.location.href,
+      });
+      server.post("/api/mail/send-newsletter-confirmation", {
+        name: "Mentorheal Subscriber",
+        email: email.toLowerCase(),
+      });
+      toast.success("Subscribed successfully! 🎉");
+      setEmail("");
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  };
+
+  return (
+    <footer className="bg-gradient-to-b from-primary via-primary to-white pt-8 text-sm text-center bg-primary">
+      <div className="container px-4 mx-auto">
+        <div className="flex flex-wrap justify-between text-left lg:text-left">
+          <div className="w-full px-4 text-center lg:w-5/12">
+            <div>
+              <Link to="/" className="flex">
+                <p className="mx-auto mb-5 text-3xl font-bold text-transparent bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text md:text-4xl">
+                  MentorHeal
+                </p>
+              </Link>
+            </div>
+            <div className="text-xs text-center text-white lg:text-sm">
+              <p className="leading-5 md:mx-4">
+                MentorHeal is the holistic wellness mentorship platform where we
+                connect the mentees with experienced, qualified and certified
+                mentors across the country.
+              </p>
+            </div>
+            <div className="py-8 space-y-8">
+              <form
+                onSubmit={handleSubscribe}
+                className="items-center justify-center space-x-2 space-y-4 md:flex md:space-y-0"
+              >
+                <input
+                  type="email"
+                  placeholder="Your email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  required
+                  className="px-6 py-3 leading-tight border-white border text-gray-700 shadow appearance-none rounded-3xl w-54 md:w-64 focus:outline-none focus:shadow-outline"
+                />
+                <button className="px-6 py-2 bg-[#5789aa] text-white border-white border-2 rounded-full">
+                  {!loading ? "Subscribe!" : "Subscribing..."}
+                </button>
+                <ToastContainer />
+              </form>
+            </div>
+          </div>
+          <div className="w-full px-4 md:w-6/12 mx-auto flex flex-wrap mb-6 items-top">
+            <div className="w-full px-4 ml-auto md:w-1/2 lg:w-6/12">
+              <span className="block mb-2 text-sm text-white uppercase">
+                Mentorheal
+              </span>
+              <ul className="text-[#dde5f1] list-unstyled space-y-4 my-6">
+                <li>
+                  <a href="https://mentorheal.com/about">About Us</a>
+                </li>
+                <li>
+                  <a href="https://mentorheal.com/how">How it works</a>
+                </li>
+                <li>
+                  <a href="https://mentorheal.com/join-as-mentor">
+                    Join as Mentor
+                  </a>
+                </li>
+              </ul>
+            </div>
+            {/* <div className="w-full px-4 ml-auto lg:w-4/12">
+                <span className="block mb-2 text-sm text-white uppercase">
+                  Mentorship Options
+                </span>
+                <ul className="text-[#dde5f1] list-unstyled space-y-3 my-6 cursor-pointer">
+                  {Carddata.map((item, index) => {
+                    return (
+                      <li className="cursor-pointer" key={index}>
+                        {" "}
+                        <Link
+                          key={index}
+                          to={`/${item.Title}`}
+                          state={{
+                            Title: item.Title,
+                            Background: item.Background,
+                            Blog: item.Blog,
+                          }}
+                        >
+                          {item.Title}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div> */}
+            <div className="w-full px-4 md:w-1/2 lg:w-4/12">
+              <span className="block mb-2 text-sm text-white uppercase">
+                Other Resources
+              </span>
+              <ul className="text-[#dde5f1] list-unstyled space-y-4 my-6 cursor-pointer">
+                <li>Support</li>
+                <li>Terms &amp; Conditions</li>
+                <li>Privacy Policy</li>
+                <li>Contact Us</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-center space-x-6 [&>a]:p-1 [&>a]:bg-white [&>a]:rounded-full">
+          <a href="https://www.linkedin.com/company/mentorheal/">
+            <FaLinkedin style={{ color: "#1DA1F2" }} size={25} />
+          </a>
+          <a href="https://instagram.com/mentorheal_forlife">
+            <FaInstagram style={{ color: "#C13584" }} size={25} />
+          </a>
+          <a href="https://x.com/MentorHeal">
+            <FaXTwitter size={25} />
+          </a>
+          <a href="https://youtube.com/@MentorHealOfficial">
+            <FaYoutube style={{ color: "#CD201F" }} size={25} />
+          </a>
         </div>
       </div>
 
-      {/* right section */}
-      <div className="bg-blue-200 w-1/2">right</div>
-    </div>
+      <hr className="mt-6 bg-white border-0 h-[1.5px]" />
+
+      <div className="flex bg-primary py-6 flex-wrap items-center justify-center md:justify-between">
+        <div className="w-full px-4 mx-auto text-center md:w-4/12">
+          <div className="py-1 text-sm text-white">
+            ©<span className="mx-1">{year}</span>
+            <a href="/">MentorHeal Community</a>
+            <span className="mx-1">|</span>
+            <a href="https://mentorheal.com">MentorHeal</a>
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 };
 
