@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { logout } from "../config/firebase";
-import logo from "../../public/static/assets/mentorheal-logo.png";
-import searchlogo from "../../public/static/assets/searchIcon.svg";
-import userProfile from "../../public/static/assets/profile-user.png";
+import logo from "/static/assets/mentorheal-logo.png";
+import searchlogo from "/static/assets/searchIcon.svg";
+import userProfile from "/static/assets/profile-user.png";
 
 const NavBar = () => {
   return (

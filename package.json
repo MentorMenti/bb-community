@@ -3,6 +3,9 @@
   "private": false,
   "version": "1.0.0",
   "type": "module",
+  "repository": "https://github.com/arpankumarde/mentorheal-community",
+  "author": "arpankumarde <134305585+arpankumarde@users.noreply.github.com>",
+  "license": "MIT",
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
