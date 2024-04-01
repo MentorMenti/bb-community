@@ -67,8 +67,8 @@ const Post = () => {
   return (
     <React.Fragment>
       <NavBar />
-      <div className="flex flex-col items-center gap-4 m-4">
-        <div className="border-black border rounded p-4 flex flex-col gap-4 w-2/5">
+      <div className="bg-[#f5f9fa]  flex flex-col items-center gap-4 p-4">
+        <div className="bg-white border-solid border rounded-lg p-4 flex flex-col gap-4 w-2/5">
           <div className="flex flex-row gap-4 items-center">
             <CgProfile size={36} />
             <div className="items-center">
@@ -84,7 +84,7 @@ const Post = () => {
           {/* <hr class="rounded-md mb-3" /> */}
 
           <div className="flex flex-row gap-4 items-center">
-            <div className="flex flex-row gap-1 items-center border-black border rounded p-1">
+            <div className="flex flex-row gap-1 items-center  border rounded-md p-1">
               <button
                 onClick={async () => {
                   const docRef = doc(db, "posts", id);
@@ -101,7 +101,7 @@ const Post = () => {
               </button>
               <div>{postDetail.upvotes ? postDetail.upvotes : 0}</div>
             </div>
-            <div className="flex flex-row gap-1 items-center border-black border rounded p-1">
+            <div className="flex flex-row gap-1 items-center  border rounded-md p-1">
               <button
                 onClick={async () => {
                   const docRef = doc(db, "posts", id);
@@ -121,8 +121,8 @@ const Post = () => {
           </div>
         </div>
 
-        <div className="border-black border rounded p-4 gap-2 flex flex-col w-2/5">
-          <div className="border-black border rounded p-4 flex flex-row gap-4 items-center">
+        <div className=" bg-white border-solid  rounded-lg border p-4 gap-4 flex flex-col w-2/5">
+          <div className="rounded flex flex-row gap-4 items-center">
             <CgProfile size={36} />
             <input
               onChange={(e) => {
@@ -130,7 +130,7 @@ const Post = () => {
                 setnewComment(value);
                 // console.log(newComment);
               }}
-              className="border-black border rounded p-2 w-full"
+              className="border rounded-md p-2 w-full"
               type="text"
               name="name"
               placeholder="Add a comment"
@@ -142,13 +142,13 @@ const Post = () => {
               setShowReply(true);
               addComment();
             }}
-            className=" rounded p-2 w-20 bg-[#4a7999] text-white"
+            className=" border-solid rounded-md p-2  bg-[#4a7999] text-white font-semibold"
           >
-            submit
+            Submit
           </button>
         </div>
 
-        <div className="border-black border rounded p-4 gap-4 w-2/5">
+        <div className="gap-4 w-2/5">
           <div className="text-2xl">Answered by others</div>
           <br />
 
@@ -158,7 +158,7 @@ const Post = () => {
                   return (
                     <div
                       key={key}
-                      className="border-black border p-4 rounded flex flex-col gap-4 "
+                      className="bg-white border-solid border p-4 rounded-lg flex flex-col gap-4 "
                     >
                       <div className="border-black flex flex-row gap-4 items-center">
                         <CgProfile size={36} />
@@ -168,13 +168,13 @@ const Post = () => {
 
                       <div className=" flex flex-row gap-4 items-center justify-between">
                         <div className="flex flex-row gap-4">
-                          <div className="border-black border rounded p-1 items-center flex flex-row gap-1">
+                          <div className=" border rounded-md p-1 items-center flex flex-row gap-1">
                             <button>
                               <BiSolidUpvote color="#4a7999" size={18} />
                             </button>
                             <div>14</div>
                           </div>
-                          <div className="border-black border rounded p-1 flex flex-row items-center gap-1">
+                          <div className="border rounded-md p-1 flex flex-row items-center gap-1">
                             <button>
                               <BiSolidDownvote color="#4a7999" size={18} />
                             </button>
@@ -212,7 +212,6 @@ const Post = () => {
               : null}
           </div>
         </div>
-        <br />
       </div>
 
       <Footer />

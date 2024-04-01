@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const RecommendedPosts = () => {
   return (
-    <div className="border-black border hidden md:block md:w-[20%]">
+    <div className="border bg-white border-solid rounded-lg p-4 hidden md:block md:w-[20%]">
       <div>Recommended Posts</div>
       <ul className="flex flex-row gap-6 p-4 sm:flex-col flex-wrap">
         <Link className="flex flex-row" to={`/category/`}>

@@ -13,18 +13,17 @@ const Home = () => {
   if (!user) return <Login />;
 
   return (
-    // <React.Fragment>
-    <div className="w-full border-black border">
-      <NavBar />
-      <div className="md:py-6 md:px-6 flex flex-col gap-4 justify-between md:flex-row">
-        <Categories />
-        <Posts />
-        <RecommendedPosts />
+    <React.Fragment>
+      <div className="w-full ">
+        <NavBar />
+        <div className=" bg-[#f5f9fa] md:py-6 md:px-6 flex items-start flex-col md:m-0 px-4 gap-4  md:flex-row">
+          <Categories />
+          <Posts />
+          <RecommendedPosts />
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
-
-    // </React.Fragment>
+    </React.Fragment>
   );
 };
 

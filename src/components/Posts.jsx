@@ -70,16 +70,16 @@ const Posts = () => {
   return (
     <div className=" overflow-auto w-full md:w-[50%] flex flex-col gap-4  ">
       <form
-        className="p-4 flex flex-col gap-4 border-black border rounded"
+        className="p-4 flex flex-col gap-4 border bg-white border-solid  rounded-lg"
         onSubmit={handleCreatePost}
       >
-        <div className="border-black border p-4 flex flex-row gap-4 items-center rounded">
+        <div className="border-solid  flex flex-row gap-4 items-center rounded-lg">
           <div>
             <CgProfile size={36} />
           </div>
           <input
             // onClick={togglePop}
-            className="border-black border rounded p-2 w-full"
+            className=" border-solid  border rounded-md p-2 w-full"
             type="text"
             name="name"
             placeholder="Enter your question"
@@ -92,7 +92,7 @@ const Posts = () => {
         <button
           // onClick={togglePop}
           type="submit"
-          className="border-black border p-2 rounded"
+          className="border-solid text-white font-semibold bg-[#4a7999] border p-2 rounded-md"
         >
           Post
         </button>
@@ -101,13 +101,15 @@ const Posts = () => {
           <Modal newPost={newPost} setNewPost={setNewPost} toggle={togglePop} />
         ) : null}
       </form>
+      <hr class="rounded-lg " />
+
       {posts ? console.log(posts) : 0}
       {posts?.map((post, key) => (
         <div
-          className="border-black border p-4 flex flex-col gap-2 rounded"
+          className=" bg-white border-solid border p-4 flex flex-col gap-2 rounded-lg"
           key={key}
         >
-          <div className="border-black flex flex-row gap-4 rounded items-center">
+          <div className=" flex flex-row gap-4 items-center">
             <CgProfile size={36} />
             <div className="items-center">
               <div>
@@ -120,11 +122,11 @@ const Posts = () => {
           </div>
           <div className="">{post.text}</div>
 
-          <hr class="rounded-md mb-3" />
+          <hr class="rounded-lg mb-3" />
 
           <div className="flex flex-row gap-4 justify-between">
             <div className="flex flex-row gap-4">
-              <div className="flex flex-row gap-1 items-center border-black border rounded p-1">
+              <div className="flex flex-row gap-1 items-center border rounded-md p-1">
                 <button
                   onClick={async () => {
                     const docRef = doc(db, "posts", post.id);
@@ -146,7 +148,7 @@ const Posts = () => {
                 </button>
                 <div>{post.metadata.upvotes ? post.metadata.upvotes : 0}</div>
               </div>
-              <div className="flex flex-row gap-1 items-center border-black border rounded p-1 ">
+              <div className="flex flex-row gap-1 items-center  border rounded-md p-1 ">
                 <button
                   onClick={async () => {
                     const docRef = doc(db, "posts", post.id);
@@ -174,7 +176,7 @@ const Posts = () => {
 
             <Link
               to={`/post/${post.id}`}
-              className=" bg-[#4a7999] text-white py-1 text-center flex gap-1 justify-center items-center w-20 rounded font-semibold"
+              className=" bg-[#4a7999] text-white py-1 text-center flex gap-1 justify-center items-center w-20 rounded-md font-semibold"
             >
               <FaReply color="white" size={14} /> Reply
             </Link>
