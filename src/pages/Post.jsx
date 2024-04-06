@@ -29,14 +29,14 @@ const Post = () => {
     const docSnap = await getDoc(docRef);
     // console.log(docSnap.data());
 
-    var updatedComment = docSnap.data().comment;
+    var updatedComment = docSnap.data().comments;
     updatedComment = updatedComment
       ? [...updatedComment, newComment]
       : [newComment];
     // console.log(updatedComment);
 
     await updateDoc(docRef, {
-      comment: updatedComment,
+      comments: updatedComment,
     });
 
     setNewComment("");
@@ -51,7 +51,7 @@ const Post = () => {
       console.log(postData);
       const result = {
         ...postDetail,
-        comments: postData.comment,
+        comments: postData.comments,
         upvotes: postData.metadata.upvotes,
         downvotes: postData.metadata.downvotes,
         text: postData.text,

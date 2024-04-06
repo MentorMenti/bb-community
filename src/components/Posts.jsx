@@ -28,13 +28,15 @@ const Posts = () => {
   const [newPost, setNewPost] = useState("");
   const [user] = useAuthState(auth);
 
+  console.log(posts);
+
   const handleCreatePost = async (e) => {
     e.preventDefault();
     const createPost = async () => {
       try {
         const postData = {
           text: newPost,
-          timestamp: new Date(),
+          timestamp: new Date().toISOString(),
           comments: [],
           uid: user.uid,
           metadata: {
@@ -113,7 +115,7 @@ const Posts = () => {
               <div className="flex gap-2 items-center">
                 {post.author ?? "Anonymous"}
                 <div className="h-1.5 w-1.5 bg-[#bbb] inline-block rounded-full"></div>
-                {post?.timestamp?.toDate().toDateString()}
+                {new Date(post?.timestamp)?.toDateString()}
               </div>
               <div className="text-xs">{post?.category ?? "Uncategorised"}</div>
             </div>
