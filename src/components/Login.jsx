@@ -6,9 +6,8 @@ import {
   signInWithGoogle,
 } from "../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import logo from "/static/assets/mentorheal-logo.png";
+import logo from "/brand/main-logo.png";
 import microsoftlogo from "/static/assets/microsoft-logo.png";
-// import loginbg from "/static/assets/loginbg.jpg";
 import googleLogo from "/static/assets/googleLogo.png";
 import gradient from "/static/assets/background.jpg";
 

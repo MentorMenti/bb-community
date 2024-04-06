@@ -33,6 +33,7 @@ const RecommendedPosts = () => {
           <Link
             className="flex flex-row hover:bg-gray-100 active:bg-gray-200 p-2 rounded-md w-full"
             to={`/post/${post.id}`}
+            key={post.id}
           >
             <span className="text-ellipsis line-clamp-3 text-sm">
               {post.text}
