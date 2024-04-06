@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { MdHealthAndSafety } from "react-icons/md";
 
 // icons
 import Career from "../icons/Career.png";
