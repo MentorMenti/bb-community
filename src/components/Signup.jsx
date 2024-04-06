@@ -6,10 +6,10 @@ import {
   signInWithGoogle,
 } from "../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import logo from "../../public/static/assets/mentorheal-logo.png";
-import microsoftlogo from "../../public/static/assets/microsoft-logo.png";
-import googleLogo from "../../public/static/assets/googleLogo.png";
-import gradient from "../../public/static/assets/background.jpg";
+import logo from "/static/assets/mentorheal-logo.png";
+import microsoftlogo from "/static/assets/microsoft-logo.png";
+import googleLogo from "/static/assets/googleLogo.png";
+import gradient from "/static/assets/background.jpg";
 
 const Signup = () => {
   const [email, setEmail] = useState("");

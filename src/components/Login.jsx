@@ -6,11 +6,11 @@ import {
   signInWithGoogle,
 } from "../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import logo from "../../public/static/assets/mentorheal-logo.png";
-import microsoftlogo from "../../public/static/assets/microsoft-logo.png";
-// import loginbg from "../../public/static/assets/loginbg.jpg";
-import googleLogo from "../../public/static/assets/googleLogo.png";
-import gradient from "../../public/static/assets/background.jpg";
+import logo from "/static/assets/mentorheal-logo.png";
+import microsoftlogo from "/static/assets/microsoft-logo.png";
+// import loginbg from "/static/assets/loginbg.jpg";
+import googleLogo from "/static/assets/googleLogo.png";
+import gradient from "/static/assets/background.jpg";
 
 const Login = () => {
   const [email, setEmail] = useState("");

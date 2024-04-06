@@ -15,9 +15,9 @@ import Spirituality from "../icons/Spirituality.png";
 
 const CategoryList = () => {
   return (
-    <ul className=" w-full md:w-[20%] flex flex-row gap-4 border-black p-4 md:flex-col flex-wrap [&>a]:w-40 items-center justify-center">
+    <ul className="w-full md:w-[20%] flex flex-row gap-2 border-black sm:flex-col flex-wrap [&>a]:w-60 [&>a]:p-2 [&>a]:pr-4 [&>a]:rounded-md hover:[&>a]:bg-gray-100">
       <Link
-        className="flex flex-row items-center  text-base font-semibold gap-3"
+        className="flex flex-row items-center text-base font-semibold gap-3"
         to={`/category/health`}
       >
         <img src={Health} className="size-9" />
