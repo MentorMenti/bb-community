@@ -97,7 +97,7 @@ const Posts = (props) => {
     };
 
     fetchData();
-  }, [props.category]);
+  }, [posts, props.category]);
 
   return (
     <div className="overflow-auto w-full md:w-[50%] flex flex-col gap-2">
@@ -176,7 +176,17 @@ const Posts = (props) => {
                     const docSnap = await getDoc(docRef);
                     const postData = docSnap.data();
 
+                    console.log(`post before increasing the likes `, postData);
+
                     const updatedVotes = postData.metadata.upvotes + 1;
+                    const updatedPost = {
+                      ...postData,
+                      [postData.metadata.upvotes]: updatedVotes,
+                    };
+
+                    const result = [...posts, updatedPost];
+                    console.log(`after `, result);
+                    setPosts(result);
 
                     console.log(
                       ` intial upvotes ${postData.metadata.upvotes} updated downvote ${updatedVotes}`

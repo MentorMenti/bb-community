@@ -29,9 +29,9 @@ const Post = () => {
     const docSnap = await getDoc(docRef);
     // console.log(docSnap.data());
 
-    var updatedComment = docSnap.data().comments;
-    updatedComment = updatedComment
-      ? [...updatedComment, newComment]
+    const listComment = docSnap.data().comments;
+    const updatedComment = listComment
+      ? [...listComment, newComment]
       : [newComment];
     // console.log(updatedComment);
 
@@ -48,9 +48,10 @@ const Post = () => {
 
     if (docSnap.exists()) {
       const postData = docSnap.data();
-      console.log(postData);
+      // console.log(postData);
       const result = {
         ...postDetail,
+        category: postData.category,
         comments: postData.comments,
         upvotes: postData.metadata.upvotes,
         downvotes: postData.metadata.downvotes,
@@ -67,7 +68,7 @@ const Post = () => {
 
   useEffect(() => {
     fetchPost();
-  }, []);
+  }, [postDetail.comments]);
 
   return (
     <React.Fragment>
@@ -84,7 +85,12 @@ const Post = () => {
                 {new Date(postDetail?.timestamp)?.toDateString()}
               </div>
               <div className="text-xs">
-                {postDetail.category ?? "Uncategorised"}
+                {/* {postDetail.category ?? "Uncategorised"} */}
+                {postDetail.category
+                  ? postDetail.category.map((val, key) => {
+                      return <span key={key}>{val} &nbsp; </span>;
+                    })
+                  : "uncategorized"}
               </div>
             </div>
           </div>
