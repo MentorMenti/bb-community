@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
 import { logout } from "../config/firebase";
-import logo from "/static/assets/mentorheal-logo.png";
+import { mainLogo } from "../assets";
 
 const NavBar = () => {
   return (
     <div className="h-16 shadow-md shadow-blue-100 flex justify-between items-center px-8">
       <Link to="/">
         <img
-          className="w-[208px] h-[26.44px] hover:cursor-pointer "
-          src={logo}
+          className="h-8"
+          src={mainLogo}
           alt=""
         />
       </Link>

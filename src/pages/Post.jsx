@@ -55,7 +55,7 @@ const Post = () => {
         upvotes: postData.metadata.upvotes,
         downvotes: postData.metadata.downvotes,
         text: postData.text,
-        timestamp: postData.timestamp.toDate().toDateString(),
+        timestamp: postData.timestamp,
       };
       setPostDetail(result);
 
@@ -80,7 +80,8 @@ const Post = () => {
               <div className="flex gap-2 items-center">
                 {postDetail.author ?? "Anonymous"}
                 <div className="h-1.5 w-1.5 bg-[#bbb] inline-block rounded-full"></div>
-                {postDetail?.timestamp}
+                {/* {postDetail.timestamp} */}
+                {new Date(postDetail?.timestamp)?.toDateString()}
               </div>
               <div className="text-xs">
                 {postDetail.category ?? "Uncategorised"}
