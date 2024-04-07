@@ -21,12 +21,10 @@ function Modal(props) {
   const updateCat = (val) => {
     setStyle("border border-black p-2 bg-slate-800 text-white");
 
-    // console.log(val);
     const updatedActiveCategory = {
       ...catActive,
       [val.slug]: !catActive[val.slug],
     };
-    // console.log(`updated one`, updatedActiveCategory);
     setCategoryActive(updatedActiveCategory);
 
     const result = Object.keys(updatedActiveCategory).filter(
@@ -34,9 +32,7 @@ function Modal(props) {
     );
 
     setSelectedCategory(result);
-    // // console.log(selectedCategory);
     props.setCategory(result);
-    console.log(`categories `, catActive, `active categories`, result);
   };
 
   return (
@@ -98,9 +94,6 @@ function Modal(props) {
           >
             Cancel
           </button>
-          {/* {props.newPost.length < 10 && selectedCategory.length > 0
-            ? console.log(true)
-            : console.log(false)} */}
           <button
             disabled={
               props.newPost.length > 10 && selectedCategory.length > 0

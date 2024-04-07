@@ -18,7 +18,7 @@ const Home = () => {
       <div className="md:py-6 md:px-6 flex flex-col gap-2 justify-between md:flex-row">
         <Categories />
         <div className="w-px bg-blue-300"></div>
-        <Posts />
+        <Posts category="all" />
         <div className="w-px bg-blue-300"></div>
         <RecommendedPosts />
       </div>

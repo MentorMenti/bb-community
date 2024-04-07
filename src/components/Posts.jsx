@@ -8,6 +8,7 @@ import {
   doc,
   updateDoc,
   query,
+  where,
   orderBy,
 } from "firebase/firestore";
 import { auth, db } from "../config/firebase";
@@ -18,9 +19,8 @@ import { BiSolidUpvote, BiSolidDownvote } from "react-icons/bi";
 import { FaReply } from "react-icons/fa";
 import { categoryData } from "../data";
 
-const Posts = () => {
+const Posts = (props) => {
   const [seen, setSeen] = useState(false);
-  // const [userData, setUserData] = useState([]);
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState("");
   const [category, setCategory] = useState([]);
@@ -40,7 +40,6 @@ const Posts = () => {
       // });
       // console.log(val);
       try {
-        // console.log(`the category`, category);
         const postData = {
           // author: val.userData.name,
           text: newPost,
@@ -77,31 +76,29 @@ const Posts = () => {
         ...doc.data(),
         id: doc.id,
       }));
-      setPosts(postData);
+
+      const cpyPostData = postData;
+      const filteredPost = cpyPostData.filter((val1) => {
+        const categoryExist = val1.category ? val1 : false;
+
+        const filterCat = categoryExist
+          ? categoryExist.category.filter((val2) => {
+              return val2 === props.category;
+            })
+          : false;
+
+        const result = filterCat == [] || filterCat == false ? false : true;
+
+        return result;
+      });
+
+      const result = props.category === "all" ? postData : filteredPost;
+      setPosts(result);
     };
 
     fetchData();
-  }, []);
+  }, [props.category]);
 
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     const userRef = collection(db, "users");
-  //     const docSnap = await getDocs(userRef);
-
-  //     var result = [];
-
-  //     docSnap.forEach((doc) => {
-  //       console.log(doc.data());
-  //       // This method doesnt work
-  //       // result = [...userData, doc.data()];
-  //       result.push(doc.data());
-  //       // console.log(`userData `, result);
-  //     });
-  //     setUserData(result);
-  //   };
-
-  //   fetchUserData();
-  // }, []);
   return (
     <div className="overflow-auto w-full md:w-[50%] flex flex-col gap-2">
       <form
@@ -139,14 +136,6 @@ const Posts = () => {
       </form>
 
       {posts?.map((post) => {
-        {
-          /* const val = userData.find((val) => {
-          return val.uid === post.uid;
-        });
-
-        console.log(`match `, val ? "found" : "not found"); */
-        }
-
         return (
           <div
             key={post.id}

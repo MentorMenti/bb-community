@@ -13,10 +13,9 @@ const Category = () => {
   return (
     <React.Fragment>
       <NavBar />
-      Category : {id}
-      <div className="flex flex-col justify-between	sm:flex-row w-12/12 border-dashed border-2 border-black">
+      <div className="flex flex-col justify-between	sm:flex-row w-12/12 ">
         <Categories />
-        <Posts />
+        <Posts category={id} />
         <RecommendedPosts />
       </div>
       <Footer />
