@@ -22,21 +22,26 @@ const Post = () => {
     text: "",
   });
   const [user] = useAuthState(auth);
-  const userId = user.uid;
+  // console.log(user);
   const docRef = doc(db, "posts", id);
 
   const upVote = async () => {
     var AlreadyUpvote = postDetail.upvotes.find((val) => {
-      return val === userId;
+      return val === user.uid;
     });
     AlreadyUpvote = AlreadyUpvote ? AlreadyUpvote : false;
+
+    var alreadyDownvote = postDetail.downvotes.find((val) => {
+      return val === user.uid;
+    });
+    alreadyDownvote = alreadyDownvote ? alreadyDownvote : false;
 
     const upvoteList = postDetail.upvotes;
 
     if (AlreadyUpvote) {
       console.log("already upvoted");
       const updatedUpvoteList = upvoteList.filter((val) => {
-        return val === userId ? false : true;
+        return val === user.uid ? false : true;
       });
       // console.log(updatedUpvoteList);
 
@@ -51,33 +56,68 @@ const Post = () => {
         "metadata.upvotes": updatedUpvoteList,
       });
     } else {
-      upvoteList.push(userId);
+      upvoteList.push(user.uid);
 
-      const updatedPost = {
-        ...postDetail,
-        upvotes: upvoteList,
-      };
+      var updatedPost;
+      if (alreadyDownvote) {
+        const updatedDownvoteList = postDetail.downvotes.filter((val) => {
+          return val === user.uid ? false : true;
+        });
 
-      setPostDetail(updatedPost);
+        updatedPost = {
+          ...postDetail,
+          upvotes: upvoteList,
+          downvotes: updatedDownvoteList,
+        };
 
-      await updateDoc(docRef, {
-        "metadata.upvotes": upvoteList,
-      });
+        setPostDetail(updatedPost);
+
+        await updateDoc(docRef, {
+          "metadata.downvotes": updatedDownvoteList,
+          "metadata.upvotes": upvoteList,
+        });
+      } else {
+        updatedPost = {
+          ...postDetail,
+          upvotes: upvoteList,
+        };
+        setPostDetail(updatedPost);
+
+        await updateDoc(docRef, {
+          "metadata.upvotes": upvoteList,
+        });
+      }
+
+      // const updatedPost = {
+      //   ...postDetail,
+      //   upvotes: upvoteList,
+      // };
+
+      // setPostDetail(updatedPost);
+
+      // await updateDoc(docRef, {
+      //   "metadata.upvotes": upvoteList,
+      // });
     }
   };
 
   const downVote = async () => {
     var alreadyDownvote = postDetail.downvotes.find((val) => {
-      return val === userId;
+      return val === user.uid;
     });
     alreadyDownvote = alreadyDownvote ? alreadyDownvote : false;
+
+    var alreadyUpvote = postDetail.upvotes.find((val) => {
+      return val === user.uid;
+    });
+    alreadyUpvote = alreadyUpvote ? alreadyUpvote : false;
 
     const downvoteList = postDetail.downvotes;
 
     if (alreadyDownvote) {
       // console.log("already downvoted");
       const updatedDownvoteList = downvoteList.filter((val) => {
-        return val === userId ? false : true;
+        return val === user.uid ? false : true;
       });
       // console.log(updatedDownvoteList);
 
@@ -92,18 +132,51 @@ const Post = () => {
         "metadata.downvotes": updatedDownvoteList,
       });
     } else {
-      downvoteList.push(userId);
+      downvoteList.push(user.uid);
 
-      const updatedPost = {
-        ...postDetail,
-        downvotes: downvoteList,
-      };
+      var updatedPost;
+      if (alreadyUpvote) {
+        const updatedUpvoteList = postDetail.upvotes.filter((val) => {
+          return val === user.uid ? false : true;
+        });
 
-      setPostDetail(updatedPost);
+        updatedPost = {
+          ...postDetail,
 
-      await updateDoc(docRef, {
-        "metadata.downvotes": downvoteList,
-      });
+          upvotes: updatedUpvoteList,
+          downvotes: downvoteList,
+        };
+
+        setPostDetail(updatedPost);
+
+        await updateDoc(docRef, {
+          "metadata.downvotes": downvoteList,
+          "metadata.upvotes": updatedUpvoteList,
+        });
+      } else {
+        updatedPost = {
+          ...postDetail,
+          downvotes: downvoteList,
+        };
+        setPostDetail(updatedPost);
+
+        await updateDoc(docRef, {
+          "metadata.downvotes": downvoteList,
+        });
+      }
+
+      // downvoteList.push(user.uid);
+
+      // const updatedPost = {
+      //   ...postDetail,
+      //   downvotes: downvoteList,
+      // };
+
+      // setPostDetail(updatedPost);
+
+      // await updateDoc(docRef, {
+      //   "metadata.downvotes": downvoteList,
+      // });
     }
   };
 
