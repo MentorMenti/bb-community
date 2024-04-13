@@ -84,7 +84,7 @@ const Signup = () => {
           <div className="md:bg-slate-200 md:w-px"></div>
 
           {/* right section */}
-          <div className="md:w-[300px] w-auto md:-ml-2 mx-5 -mb-12 md:-mt-4">
+          <div className="md:w-[300px] w-auto md:-ml-2 mx-5 -mb-16 md:-mt-4 ">
             <p className="md:text-lg text-lg md:font-semibold font-semibold">
               SignUp
             </p>

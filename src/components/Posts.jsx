@@ -25,12 +25,65 @@ const Posts = (props) => {
   const [newPost, setNewPost] = useState("");
   const [category, setCategory] = useState([]);
   const [user] = useAuthState(auth);
+  const [userData, setUserData] = useState([]);
 
   // console.log(posts);
+  const postRef = collection(db, "posts");
 
   function togglePop() {
     setSeen((prev) => !prev);
   }
+
+  const getUser = async () => {
+    const usersRef = collection(db, "users");
+    // const u = query(usersRef, orderBy("timestamp", "desc"));
+    const usersShot = await getDocs(usersRef);
+    const usersData = usersShot.docs.map((doc) => {
+      console.log(
+        doc.data().email === "222@gmail.com" ? "exists" : doc.data().email
+      );
+      // return doc.data().email;
+    });
+    setUserData(usersData);
+    console.log("userData", ...userData);
+  };
+
+  const upVote = async (post) => {
+    const docRef = doc(db, "posts", post.id);
+
+    const updatedVotes = post.metadata.upvotes + 1;
+    const updatedPost = {
+      ...post,
+      metadata: { ...post.metadata, upvotes: updatedVotes },
+    };
+
+    const updatedPosts = posts.map((p) => (p.id === post.id ? updatedPost : p));
+
+    // const result = [...posts, updatedPost];
+    // console.log(`after `, result);
+    setPosts(updatedPosts);
+
+    await updateDoc(docRef, {
+      "metadata.upvotes": updatedVotes,
+    });
+  };
+
+  const downVote = async (post) => {
+    const docRef = doc(db, "posts", post.id);
+
+    const updatedVotes = post.metadata.downvotes + 1;
+    const updatedPost = {
+      ...post,
+      metadata: { ...post.metadata, downvotes: updatedVotes },
+    };
+
+    const updatedPosts = posts.map((p) => (p.id === post.id ? updatedPost : p));
+    setPosts(updatedPosts);
+
+    await updateDoc(docRef, {
+      "metadata.downvotes": updatedVotes,
+    });
+  };
 
   const handleCreatePost = async (e) => {
     e.preventDefault();
@@ -52,7 +105,7 @@ const Posts = (props) => {
           },
           category: category,
         };
-        const postRef = collection(db, "posts");
+        // const postRef = collection(db, "posts");
         const createdPost = await addDoc(postRef, postData);
         console.log(`Post created successfully with ID:`, createdPost.id);
         setPosts([postData, ...posts]);
@@ -67,37 +120,38 @@ const Posts = (props) => {
     setSeen(false);
   };
 
+  const fetchData = async () => {
+    // const postsRef = collection(db, "posts");
+    const q = query(postRef, orderBy("timestamp", "desc"));
+    const snapshot = await getDocs(q);
+    const postData = snapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const cpyPostData = postData;
+    const filteredPost = cpyPostData.filter((val1) => {
+      const categoryExist = val1.category ? val1 : false;
+
+      const filterCat = categoryExist
+        ? categoryExist.category.filter((val2) => {
+            return val2 === props.category;
+          })
+        : false;
+
+      const result = filterCat == [] || filterCat == false ? false : true;
+
+      return result;
+    });
+
+    const result = props.category === "all" ? postData : filteredPost;
+    setPosts(result);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const postsRef = collection(db, "posts");
-      const q = query(postsRef, orderBy("timestamp", "desc"));
-      const snapshot = await getDocs(q);
-      const postData = snapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-
-      const cpyPostData = postData;
-      const filteredPost = cpyPostData.filter((val1) => {
-        const categoryExist = val1.category ? val1 : false;
-
-        const filterCat = categoryExist
-          ? categoryExist.category.filter((val2) => {
-              return val2 === props.category;
-            })
-          : false;
-
-        const result = filterCat == [] || filterCat == false ? false : true;
-
-        return result;
-      });
-
-      const result = props.category === "all" ? postData : filteredPost;
-      setPosts(result);
-    };
-
+    console.count(1);
     fetchData();
-  }, [posts, props.category]);
+    // getUser();
+  }, [props.category]);
 
   return (
     <div className="overflow-auto w-full md:w-[50%] flex flex-col gap-2">
@@ -171,30 +225,8 @@ const Posts = (props) => {
                 <button
                   type="button"
                   className="flex flex-row gap-1 items-center justify-center w-16 border-blue-200 bg-blue-50 border rounded-md p-1 shadow-md shadow-blue-50 hover:shadow-blue-100"
-                  onClick={async () => {
-                    const docRef = doc(db, "posts", post.id);
-                    const docSnap = await getDoc(docRef);
-                    const postData = docSnap.data();
-
-                    console.log(`post before increasing the likes `, postData);
-
-                    const updatedVotes = postData.metadata.upvotes + 1;
-                    const updatedPost = {
-                      ...postData,
-                      [postData.metadata.upvotes]: updatedVotes,
-                    };
-
-                    const result = [...posts, updatedPost];
-                    console.log(`after `, result);
-                    setPosts(result);
-
-                    console.log(
-                      ` intial upvotes ${postData.metadata.upvotes} updated downvote ${updatedVotes}`
-                    );
-
-                    await updateDoc(docRef, {
-                      "metadata.upvotes": updatedVotes,
-                    });
+                  onClick={() => {
+                    upVote(post);
                   }}
                 >
                   <BiSolidUpvote color="#4a7999" size={18} />
@@ -205,20 +237,8 @@ const Posts = (props) => {
                 <button
                   type="button"
                   className="flex flex-row gap-1 items-center justify-center w-16 border-blue-200 bg-blue-50 border rounded-md p-1 shadow-md shadow-blue-50 hover:shadow-blue-100"
-                  onClick={async () => {
-                    const docRef = doc(db, "posts", post.id);
-                    const docSnap = await getDoc(docRef);
-                    const postData = docSnap.data();
-
-                    const updatedVotes = postData.metadata.downvotes + 1;
-
-                    console.log(
-                      ` intial downvotes ${postData.metadata.downvotes} updated downvote ${updatedVotes}`
-                    );
-
-                    await updateDoc(docRef, {
-                      "metadata.downvotes": updatedVotes,
-                    });
+                  onClick={() => {
+                    downVote(post);
                   }}
                 >
                   <BiSolidDownvote color="#4a7999" size={18} />

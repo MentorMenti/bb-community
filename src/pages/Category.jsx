@@ -13,7 +13,10 @@ const Category = () => {
   return (
     <React.Fragment>
       <NavBar />
-      <div className="flex flex-col justify-between	sm:flex-row w-12/12 ">
+      <div
+        className="flex flex-col justify-between	sm:flex-row w-12/12 md:py-6 md:px-6 gap-2 md:flex-row
+      "
+      >
         <Categories />
         <Posts category={id} />
         <RecommendedPosts />
