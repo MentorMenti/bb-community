@@ -4,8 +4,9 @@ import { CgProfile } from "react-icons/cg";
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 import { BiSolidUpvote, BiSolidDownvote } from "react-icons/bi";
-import { db } from "../config/firebase";
+import { db, auth } from "../config/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const Post = () => {
   const [showReply, setShowReply] = useState(false);
@@ -16,10 +17,95 @@ const Post = () => {
 
   const [postDetail, setPostDetail] = useState({
     comments: [],
-    upvotes: 0,
-    downvotes: 0,
+    upvotes: [],
+    downvotes: [],
     text: "",
   });
+  const [user] = useAuthState(auth);
+  const userId = user.uid;
+  const docRef = doc(db, "posts", id);
+
+  const upVote = async () => {
+    var AlreadyUpvote = postDetail.upvotes.find((val) => {
+      return val === userId;
+    });
+    AlreadyUpvote = AlreadyUpvote ? AlreadyUpvote : false;
+
+    const upvoteList = postDetail.upvotes;
+
+    if (AlreadyUpvote) {
+      console.log("already upvoted");
+      const updatedUpvoteList = upvoteList.filter((val) => {
+        return val === userId ? false : true;
+      });
+      // console.log(updatedUpvoteList);
+
+      const updatedPost = {
+        ...postDetail,
+        upvotes: updatedUpvoteList,
+      };
+
+      setPostDetail(updatedPost);
+
+      await updateDoc(docRef, {
+        "metadata.upvotes": updatedUpvoteList,
+      });
+    } else {
+      upvoteList.push(userId);
+
+      const updatedPost = {
+        ...postDetail,
+        upvotes: upvoteList,
+      };
+
+      setPostDetail(updatedPost);
+
+      await updateDoc(docRef, {
+        "metadata.upvotes": upvoteList,
+      });
+    }
+  };
+
+  const downVote = async () => {
+    var alreadyDownvote = postDetail.downvotes.find((val) => {
+      return val === userId;
+    });
+    alreadyDownvote = alreadyDownvote ? alreadyDownvote : false;
+
+    const downvoteList = postDetail.downvotes;
+
+    if (alreadyDownvote) {
+      // console.log("already downvoted");
+      const updatedDownvoteList = downvoteList.filter((val) => {
+        return val === userId ? false : true;
+      });
+      // console.log(updatedDownvoteList);
+
+      const updatedPost = {
+        ...postDetail,
+        downvotes: updatedDownvoteList,
+      };
+
+      setPostDetail(updatedPost);
+
+      await updateDoc(docRef, {
+        "metadata.downvotes": updatedDownvoteList,
+      });
+    } else {
+      downvoteList.push(userId);
+
+      const updatedPost = {
+        ...postDetail,
+        downvotes: downvoteList,
+      };
+
+      setPostDetail(updatedPost);
+
+      await updateDoc(docRef, {
+        "metadata.downvotes": downvoteList,
+      });
+    }
+  };
 
   const addComment = async (e) => {
     e.preventDefault();
@@ -104,34 +190,25 @@ const Post = () => {
               type="button"
               className="flex flex-row gap-1 items-center justify-center w-16 border-blue-200 bg-blue-50 border rounded-md p-1 shadow-md shadow-blue-50 hover:shadow-blue-100"
               onClick={async () => {
-                const docRef = doc(db, "posts", id);
-                const updatedVotes = postDetail.upvotes + 1;
-                setPostDetail({ ...postDetail, upvotes: updatedVotes });
-
-                await updateDoc(docRef, {
-                  "metadata.upvotes": updatedVotes,
-                });
+                upVote();
               }}
             >
               <BiSolidUpvote color="#4a7999" size={18} />
-              <div>{postDetail.upvotes ? postDetail.upvotes : 0}</div>
+              <div>
+                {postDetail.upvotes.length ? postDetail.upvotes.length : 0}
+              </div>
             </button>
             <button
               type="button"
               className="flex flex-row gap-1 items-center justify-center w-16 border-blue-200 bg-blue-50 border rounded-md p-1 shadow-md shadow-blue-50 hover:shadow-blue-100"
               onClick={async () => {
-                const docRef = doc(db, "posts", id);
-                const updatedVotes = postDetail.downvotes + 1;
-                // console.log(`updated downvote ${updatedVotes}`);
-                setPostDetail({ ...postDetail, downvotes: updatedVotes });
-
-                await updateDoc(docRef, {
-                  "metadata.downvotes": updatedVotes,
-                });
+                downVote();
               }}
             >
               <BiSolidDownvote color="#4a7999" size={18} />
-              <div>{postDetail.downvotes ? postDetail.downvotes : 0}</div>
+              <div>
+                {postDetail.downvotes.length ? postDetail.downvotes.length : 0}
+              </div>
             </button>
           </div>
         </div>

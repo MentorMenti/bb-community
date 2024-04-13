@@ -27,7 +27,6 @@ const Posts = (props) => {
   const [user] = useAuthState(auth);
   const [userData, setUserData] = useState([]);
 
-  // console.log(posts);
   const postRef = collection(db, "posts");
 
   function togglePop() {
@@ -39,85 +38,10 @@ const Posts = (props) => {
     // const u = query(usersRef, orderBy("timestamp", "desc"));
     const usersShot = await getDocs(usersRef);
     const usersData = usersShot.docs.map((doc) => {
-      console.log(
-        doc.data().email === "222@gmail.com" ? "exists" : doc.data().email
-      );
       // return doc.data().email;
     });
     setUserData(usersData);
-    console.log("userData", ...userData);
-  };
-
-  const upVote = async (post) => {
-    const docRef = doc(db, "posts", post.id);
-
-    const updatedVotes = post.metadata.upvotes + 1;
-    const updatedPost = {
-      ...post,
-      metadata: { ...post.metadata, upvotes: updatedVotes },
-    };
-
-    const updatedPosts = posts.map((p) => (p.id === post.id ? updatedPost : p));
-
-    // const result = [...posts, updatedPost];
-    // console.log(`after `, result);
-    setPosts(updatedPosts);
-
-    await updateDoc(docRef, {
-      "metadata.upvotes": updatedVotes,
-    });
-  };
-
-  const downVote = async (post) => {
-    const docRef = doc(db, "posts", post.id);
-
-    const updatedVotes = post.metadata.downvotes + 1;
-    const updatedPost = {
-      ...post,
-      metadata: { ...post.metadata, downvotes: updatedVotes },
-    };
-
-    const updatedPosts = posts.map((p) => (p.id === post.id ? updatedPost : p));
-    setPosts(updatedPosts);
-
-    await updateDoc(docRef, {
-      "metadata.downvotes": updatedVotes,
-    });
-  };
-
-  const handleCreatePost = async (e) => {
-    e.preventDefault();
-    const createPost = async () => {
-      // const val = userData.find((val) => {
-      //   return val.uid === user.uid;
-      // });
-      // console.log(val);
-      try {
-        const postData = {
-          // author: val.userData.name,
-          text: newPost,
-          timestamp: new Date().toISOString(),
-          comments: [],
-          uid: user.uid,
-          metadata: {
-            upvotes: 0,
-            downvotes: 0,
-          },
-          category: category,
-        };
-        // const postRef = collection(db, "posts");
-        const createdPost = await addDoc(postRef, postData);
-        console.log(`Post created successfully with ID:`, createdPost.id);
-        setPosts([postData, ...posts]);
-        setNewPost("");
-      } catch (error) {
-        console.error("Error creating post:", error);
-        alert("Error creating post: ", error.message);
-      }
-    };
-
-    createPost();
-    setSeen(false);
+    // console.log("userData", ...userData);
   };
 
   const fetchData = async () => {
@@ -147,6 +71,154 @@ const Posts = (props) => {
     const result = props.category === "all" ? postData : filteredPost;
     setPosts(result);
   };
+
+  const upVote = async (post) => {
+    // console.log(post);
+    const docRef = doc(db, "posts", post.id);
+
+    const userId = user.uid;
+
+    var AlreadyUpvote = post.metadata.upvotes.find((val) => {
+      return val === userId;
+    });
+    AlreadyUpvote = AlreadyUpvote ? AlreadyUpvote : false;
+
+    const upvoteList = post.metadata.upvotes;
+
+    if (AlreadyUpvote) {
+      console.log("already upvoted");
+      const updatedUpvoteList = upvoteList.filter((val) => {
+        return val === userId ? false : true;
+      });
+      // console.log(updatedUpvoteList);
+
+      const updatedPost = {
+        ...post,
+        metadata: { ...post.metadata, upvotes: updatedUpvoteList },
+      };
+
+      const updatedPosts = posts.map((p) =>
+        p.id === post.id ? updatedPost : p
+      );
+
+      setPosts(updatedPosts);
+
+      await updateDoc(docRef, {
+        "metadata.upvotes": updatedUpvoteList,
+      });
+
+      // fetchData();
+    } else {
+      upvoteList.push(userId);
+
+      const updatedPost = {
+        ...post,
+        metadata: { ...post.metadata, upvotes: upvoteList },
+      };
+
+      const updatedPosts = posts.map((p) =>
+        p.id === post.id ? updatedPost : p
+      );
+
+      setPosts(updatedPosts);
+
+      await updateDoc(docRef, {
+        "metadata.upvotes": upvoteList,
+      });
+    }
+  };
+
+  const downVote = async (post) => {
+    // console.log(post);
+    const docRef = doc(db, "posts", post.id);
+
+    const userId = user.uid;
+
+    var AlreadyUpvote = post.metadata.downvotes.find((val) => {
+      return val === userId;
+    });
+    AlreadyUpvote = AlreadyUpvote ? AlreadyUpvote : false;
+
+    const downvoteList = post.metadata.downvotes;
+
+    if (AlreadyUpvote) {
+      console.log("already downvoted, removing downvote");
+      const updatedDownvoteList = downvoteList.filter((val) => {
+        return val === userId ? false : true;
+      });
+      // console.log(updatedDownvoteList);
+
+      const updatedPost = {
+        ...post,
+        metadata: { ...post.metadata, downvotes: updatedDownvoteList },
+      };
+
+      const updatedPosts = posts.map((p) =>
+        p.id === post.id ? updatedPost : p
+      );
+
+      setPosts(updatedPosts);
+
+      await updateDoc(docRef, {
+        "metadata.downvotes": updatedDownvoteList,
+      });
+
+      // fetchData();
+    } else {
+      downvoteList.push(userId);
+      const updatedPost = {
+        ...post,
+        metadata: { ...post.metadata, downvotes: downvoteList },
+      };
+
+      const updatedPosts = posts.map((p) =>
+        p.id === post.id ? updatedPost : p
+      );
+
+      setPosts(updatedPosts);
+
+      await updateDoc(docRef, {
+        "metadata.downvotes": downvoteList,
+      });
+    }
+  };
+
+  const handleCreatePost = async (e) => {
+    e.preventDefault();
+    const createPost = async () => {
+      try {
+        const postData = {
+          text: newPost,
+          timestamp: new Date().toISOString(),
+          comments: [],
+          uid: user.uid,
+          metadata: {
+            upvotes: [],
+            downvotes: [],
+          },
+          category: category,
+          // LikedBy: {
+          //   upvotes: [],
+          //   downvotes: [],
+          // },
+        };
+        // const postRef = collection(db, "posts");
+        const createdPost = await addDoc(postRef, postData);
+        console.log(`Post created successfully with ID:`, createdPost.id);
+        // setPosts([postData, ...posts]);
+        setNewPost("");
+
+        fetchData();
+      } catch (error) {
+        console.error("Error creating post:", error);
+        alert("Error creating post: ", error.message);
+      }
+    };
+
+    createPost();
+    setSeen(false);
+  };
+
   useEffect(() => {
     console.count(1);
     fetchData();
@@ -231,7 +303,9 @@ const Posts = (props) => {
                 >
                   <BiSolidUpvote color="#4a7999" size={18} />
                   <span>
-                    {post.metadata.upvotes ? post.metadata.upvotes : 0}
+                    {post.metadata.upvotes.length
+                      ? post.metadata.upvotes.length
+                      : 0}
                   </span>
                 </button>
                 <button
@@ -244,7 +318,9 @@ const Posts = (props) => {
                   <BiSolidDownvote color="#4a7999" size={18} />
 
                   <span>
-                    {post.metadata.downvotes ? post.metadata.downvotes : 0}
+                    {post.metadata.downvotes.length
+                      ? post.metadata.downvotes.length
+                      : 0}
                   </span>
                 </button>
               </div>
