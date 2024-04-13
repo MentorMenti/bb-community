@@ -7,6 +7,7 @@ import {
   getDocs,
   doc,
   updateDoc,
+  deleteDoc,
   query,
   where,
   orderBy,
@@ -16,6 +17,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { CgProfile } from "react-icons/cg";
 import Modal from "./Modal";
 import { BiSolidUpvote, BiSolidDownvote } from "react-icons/bi";
+import { MdDelete } from "react-icons/md";
 import { FaReply } from "react-icons/fa";
 import { categoryData } from "../data";
 
@@ -349,23 +351,35 @@ const Posts = (props) => {
             key={post.id}
             className="border-blue-100 border p-4 m-2 flex flex-col gap-2 rounded-md drop-shadow-md bg-white hover:shadow-xl transition duration-300 ease-in-out"
           >
-            <div className="flex flex-row gap-4 rounded-md items-center">
-              <CgProfile size={36} />
-              <div className="items-center">
-                <div className="flex gap-2 items-center">
-                  {post.author ?? "Anonymous"}
-                  <div className="h-1.5 w-1.5 bg-[#bbb] inline-block rounded-full"></div>
-                  {new Date(post?.timestamp)?.toDateString()}
-                </div>
-                <div className="text-xs">
-                  {/* {console.log(post.category)} */}
-                  {post?.category
-                    ? post.category.map((val, key) => {
-                        return <span key={key}>{val} &nbsp; </span>;
-                      })
-                    : "uncategorized"}
+            <div className="flex flex-row justify-between">
+              <div className="flex flex-row gap-4 rounded-md items-center">
+                <CgProfile size={36} />
+                <div className="items-center">
+                  <div className="flex gap-2 items-center">
+                    {post.author ?? "Anonymous"}
+                    <div className="h-1.5 w-1.5 bg-[#bbb] inline-block rounded-full"></div>
+                    {new Date(post?.timestamp)?.toDateString()}
+                  </div>
+                  <div className="text-xs">
+                    {/* {console.log(post.category)} */}
+                    {post?.category
+                      ? post.category.map((val, key) => {
+                          return <span key={key}>{val} &nbsp; </span>;
+                        })
+                      : "uncategorized"}
+                  </div>
                 </div>
               </div>
+              <button
+                className={post.uid === user.uid ? "" : "hidden"}
+                onClick={async () => {
+                  const docRef = doc(db, "posts", post.id);
+                  await deleteDoc(docRef);
+                  fetchData();
+                }}
+              >
+                <MdDelete size={18} />
+              </button>
             </div>
 
             <Link to={`/post/${post.id}`} className="">

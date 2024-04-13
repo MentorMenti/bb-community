@@ -87,17 +87,6 @@ const Post = () => {
           "metadata.upvotes": upvoteList,
         });
       }
-
-      // const updatedPost = {
-      //   ...postDetail,
-      //   upvotes: upvoteList,
-      // };
-
-      // setPostDetail(updatedPost);
-
-      // await updateDoc(docRef, {
-      //   "metadata.upvotes": upvoteList,
-      // });
     }
   };
 
@@ -164,19 +153,6 @@ const Post = () => {
           "metadata.downvotes": downvoteList,
         });
       }
-
-      // downvoteList.push(user.uid);
-
-      // const updatedPost = {
-      //   ...postDetail,
-      //   downvotes: downvoteList,
-      // };
-
-      // setPostDetail(updatedPost);
-
-      // await updateDoc(docRef, {
-      //   "metadata.downvotes": downvoteList,
-      // });
     }
   };
 
