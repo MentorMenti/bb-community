@@ -17,7 +17,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { CgProfile } from "react-icons/cg";
 import Modal from "./Modal";
 import { BiSolidUpvote, BiSolidDownvote } from "react-icons/bi";
-import { MdDelete } from "react-icons/md";
+import { MdOutlineDeleteOutline } from "react-icons/md";
 import { FaReply } from "react-icons/fa";
 import { categoryData } from "../data";
 
@@ -40,10 +40,10 @@ const Posts = (props) => {
     // const u = query(usersRef, orderBy("timestamp", "desc"));
     const usersShot = await getDocs(usersRef);
     const usersData = usersShot.docs.map((doc) => {
-      // return doc.data().email;
+      return doc.data().mentor;
     });
     setUserData(usersData);
-    // console.log("userData", ...userData);
+    console.log("userData", ...usersData);
   };
 
   const fetchData = async () => {
@@ -304,7 +304,7 @@ const Posts = (props) => {
   };
 
   useEffect(() => {
-    console.count(1);
+    // console.count(1);
     fetchData();
     // getUser();
   }, [props.category]);
@@ -378,7 +378,7 @@ const Posts = (props) => {
                   fetchData();
                 }}
               >
-                <MdDelete size={18} />
+                <MdOutlineDeleteOutline size={18} />
               </button>
             </div>
 

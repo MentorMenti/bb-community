@@ -5,12 +5,20 @@ import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 import { BiSolidUpvote, BiSolidDownvote } from "react-icons/bi";
 import { db, auth } from "../config/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  updateDoc,
+  getDocs,
+} from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { RiVerifiedBadgeFill } from "react-icons/ri";
 
 const Post = () => {
   const [showReply, setShowReply] = useState(false);
   const [newComment, setNewComment] = useState([]);
+  const [userData, setUserData] = useState([]);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -24,6 +32,18 @@ const Post = () => {
   const [user] = useAuthState(auth);
   // console.log(user);
   const docRef = doc(db, "posts", id);
+
+  const getUser = async () => {
+    const usersRef = collection(db, "users");
+    // const u = query(usersRef, orderBy("timestamp", "desc"));
+    // console.log(usersRef);
+    const usersShot = await getDocs(usersRef);
+    const usersData = usersShot.docs.map((doc) => {
+      return doc.data();
+    });
+    setUserData(usersData);
+    console.log("userData", ...usersData);
+  };
 
   const upVote = async () => {
     var AlreadyUpvote = postDetail.upvotes.find((val) => {
@@ -164,11 +184,13 @@ const Post = () => {
     const docSnap = await getDoc(docRef);
     // console.log(docSnap.data());
 
+    const cmtWid = {
+      comment: newComment,
+      uid: user.uid,
+    };
     const listComment = docSnap.data().comments;
-    const updatedComment = listComment
-      ? [...listComment, newComment]
-      : [newComment];
-    // console.log(updatedComment);
+    const updatedComment = listComment ? [...listComment, cmtWid] : [cmtWid];
+    console.log(updatedComment);
 
     await updateDoc(docRef, {
       comments: updatedComment,
@@ -203,7 +225,12 @@ const Post = () => {
 
   useEffect(() => {
     fetchPost();
+    // console.count(1);
   }, [postDetail.comments]);
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return (
     <React.Fragment>
@@ -293,6 +320,9 @@ const Post = () => {
           <div className="flex flex-col gap-6">
             {postDetail.comments
               ? postDetail.comments.map((post, key) => {
+                  const verified = userData.find((val) => {
+                    return val.uid === post.uid && val.mentor;
+                  });
                   return (
                     <div
                       key={key}
@@ -300,9 +330,20 @@ const Post = () => {
                     >
                       <div className="border-black flex flex-row gap-4 items-center">
                         <CgProfile size={36} />
-                        <div>Person {key + 1}</div>
+                        <div>{verified ? verified.name : "Person"} </div>
+
+                        {verified ? (
+                          <div className="font-bold border-double border border-[#24a865] p-2 rounded flex flex-row gap-1 items-center">
+                            <RiVerifiedBadgeFill color="#24a865" size={24} />{" "}
+                            Mentor verified
+                          </div>
+                        ) : (
+                          ""
+                        )}
                       </div>
-                      <p className="text-ellipsis line-clamp-[10]">{post}</p>
+                      <p className="text-ellipsis line-clamp-[10]">
+                        {post.comment}
+                      </p>
 
                       {/* {showReply ? (
                         <div className="pl-20 flex flex-col gap-4">
