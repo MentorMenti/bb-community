@@ -33,7 +33,7 @@ const Footer = () => {
         source: window.location.href,
       });
       server.post("/api/mail/send-newsletter-confirmation", {
-        name: "Mentorheal Subscriber",
+        name: "Badbusiness Subscriber",
         email: email.toLowerCase(),
       });
       toast.success("Subscribed successfully! 🎉");
@@ -52,13 +52,13 @@ const Footer = () => {
             <div>
               <Link to="/" className="flex">
                 <p className="mx-auto mb-5 text-3xl font-bold text-transparent bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text md:text-4xl">
-                  MentorHeal
+                  Badbusiness
                 </p>
               </Link>
             </div>
             <div className="text-xs text-center text-white lg:text-sm">
               <p className="leading-5 md:mx-4">
-                MentorHeal is the holistic wellness mentorship platform where we
+                Badbusiness is the holistic wellness mentorship platform where we
                 connect the mentees with experienced, qualified and certified
                 mentors across the country.
               </p>
@@ -86,17 +86,17 @@ const Footer = () => {
           <div className="w-full px-4 md:w-6/12 mx-auto flex flex-wrap mb-6 items-top">
             <div className="w-full px-4 ml-auto md:w-1/2 lg:w-6/12">
               <span className="block mb-2 text-sm text-white uppercase">
-                Mentorheal
+                Badbusiness
               </span>
               <ul className="text-[#dde5f1] list-unstyled space-y-4 my-6">
                 <li>
-                  <a href="https://mentorheal.com/about">About Us</a>
+                  <a href="https://badbusiness.in/about">About Us</a>
                 </li>
                 <li>
-                  <a href="https://mentorheal.com/how">How it works</a>
+                  <a href="https://badbusiness.in/how">How it works</a>
                 </li>
                 <li>
-                  <a href="https://mentorheal.com/join-as-mentor">
+                  <a href="https://badbusiness.in/join-as-mentor">
                     Join as Mentor
                   </a>
                 </li>
@@ -148,7 +148,7 @@ const Footer = () => {
           <a href="https://instagram.com/mentorheal_forlife">
             <FaInstagram style={{ color: "#C13584" }} size={25} />
           </a>
-          <a href="https://x.com/MentorHeal">
+          <a href="https://x.com/Badbusiness">
             <FaXTwitter size={25} />
           </a>
           <a href="https://youtube.com/@MentorHealOfficial">
@@ -163,9 +163,9 @@ const Footer = () => {
         <div className="w-full px-4 mx-auto text-center md:w-4/12">
           <div className="py-1 text-sm text-white">
             ©<span className="mx-1">{year}</span>
-            <a href="/">MentorHeal Community</a>
+            <a href="/">Badbusiness Community</a>
             <span className="mx-1">|</span>
-            <a href="https://mentorheal.com">MentorHeal</a>
+            <a href="https://badbusiness.in">Badbusiness</a>
           </div>
         </div>
       </div>

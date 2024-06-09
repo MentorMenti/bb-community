@@ -269,7 +269,7 @@ const Post = () => {
                 upVote();
               }}
             >
-              <BiSolidUpvote color="#4a7999" size={18} />
+              <BiSolidUpvote color="#000" size={18} />
               <div>
                 {postDetail.upvotes.length ? postDetail.upvotes.length : 0}
               </div>
@@ -281,7 +281,7 @@ const Post = () => {
                 downVote();
               }}
             >
-              <BiSolidDownvote color="#4a7999" size={18} />
+              <BiSolidDownvote color="#000" size={18} />
               <div>
                 {postDetail.downvotes.length ? postDetail.downvotes.length : 0}
               </div>

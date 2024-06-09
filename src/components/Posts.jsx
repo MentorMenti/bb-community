@@ -397,7 +397,7 @@ const Posts = (props) => {
                     upVote(post);
                   }}
                 >
-                  <BiSolidUpvote color="#4a7999" size={18} />
+                  <BiSolidUpvote color="#000" size={18} />
                   <span>
                     {post.metadata.upvotes.length
                       ? post.metadata.upvotes.length
@@ -411,7 +411,7 @@ const Posts = (props) => {
                     downVote(post);
                   }}
                 >
-                  <BiSolidDownvote color="#4a7999" size={18} />
+                  <BiSolidDownvote color="#000" size={18} />
 
                   <span>
                     {post.metadata.downvotes.length
